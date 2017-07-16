@@ -6,12 +6,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home';
 
 
-
+declare var cordova: any;
 
 @Component({
   templateUrl: 'app.html'
 })
-
 export class MyApp {
   rootPage:any = HomePage;
 

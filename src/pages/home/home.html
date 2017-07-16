@@ -1,14 +1,16 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      Buildings
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <button ion-button (click)="fetchBuildings($event)">
-  Situm Buildings
-  </button>
-  <p>{{building}}</p>
+  <ion-list padding>
+    <ion-item *ngFor="let building of buildings" (click)="goToPositioning(building)">
+      <h3>{{building.building_id}}</h3>
+      <h3>{{building.building_name}}</h3>
+    </ion-item>
+  </ion-list>
 </ion-content>

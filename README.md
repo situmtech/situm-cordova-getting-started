@@ -1,26 +1,31 @@
-This is a starter template for [Ionic](http://ionicframework.com/docs/) projects.
+#Situm Cordova Getting Started
 
-## How to use this template
+NOTE: This app is only a use-case for testing purposes. It may not be up to date or optimized.
 
-*This template does not work on its own*. The shared files for each starter are found in the [ionic2-app-base repo](https://github.com/ionic-team/ionic2-app-base).
+1) Ionic installation : https://ionicframework.com/docs/intro/installation/
 
-To use this template, either create a new ionic project using the ionic node.js utility, or copy the files from this repository into the [Starter App Base](https://github.com/ionic-team/ionic2-app-base).
+2) Link development plugin folder: 
 
-### With the Ionic CLI:
+cd situm-cordova-android-getting-started
+cordova plugin add --link <path_to_plugin_folder>/situm-cordova-plugin/
 
-Take the name after `ionic2-starter-`, and that is the name of the template to be used when using the `ionic start` command below:
+So, config.xml file should contain one line like this:
 
-```bash
-$ sudo npm install -g ionic cordova
-$ ionic start myBlank blank
-```
+    <plugin name="situm-cordova-plugin" spec="file:../situm-cordova-plugin" />
 
-Then, to run it, cd into `myBlank` and run:
 
-```bash
-$ ionic cordova platform add ios
-$ ionic cordova run ios
-```
+>Run Android version:
 
-Substitute ios for android if not on a Mac.
+- Run from command line :
 
+ionic cordova run android
+
+
+- Run from Android Studio
+
+Go to plaftforms/android folder. Create android studio project and run MainActivity class
+
+
+>Run IOS version:
+
+-This plugin is still in development

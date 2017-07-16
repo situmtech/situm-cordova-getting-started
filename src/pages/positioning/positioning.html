@@ -1,0 +1,69 @@
+<!--
+  Generated template for the PositioningPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Positioning</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list-header>
+    <button ion-button item-start color="light" (click)="startPositioning()">Start positioning.</button>
+    <button ion-button item-end color="dark" (click)="stopPositioning()">Stop. Positioning</button>
+  </ion-list-header>
+  <ion-item>
+    <ion-label>
+      STATUS
+    </ion-label>
+    <div item-content>
+      {{position.status_name}}
+    </div>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      FLOOR ID.
+    </ion-label>
+    <div item-content>
+      {{position.floor_id}}
+    </div>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      X
+    </ion-label>
+    <div item-content>
+      {{position.x}}
+    </div>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      Y
+    </ion-label>
+    <div item-content>
+      {{position.y}}
+    </div>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      ACCURACY
+    </ion-label>
+    <div item-content>
+      {{position.accuracy}}
+    </div>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      BEARING
+    </ion-label>
+    <div item-content>
+      {{position.bearing}}
+    </div>
+  </ion-item>
+</ion-content>
