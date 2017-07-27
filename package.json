@@ -26,16 +26,22 @@
         "@ionic/storage": "2.0.1",
         "browser-sync": "^2.18.12",
         "cordova-android": "^6.2.3",
-        "cordova-plugin-console": "^1.0.5",
-        "cordova-plugin-device": "^1.1.4",
+        "cordova-cli": "^1.0.0",
+        "cordova-common": "^2.0.3",
+        "cordova-create": "^1.1.0",
+        "cordova-fetch": "^1.1.0",
+        "cordova-lib": "^7.0.0",
+        "cordova-plugin-console": "^1.0.7",
+        "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-splashscreen": "^4.0.3",
-        "cordova-plugin-statusbar": "^2.2.2",
-        "cordova-plugin-whitelist": "^1.3.1",
+        "cordova-plugin-statusbar": "^2.2.3",
+        "cordova-plugin-whitelist": "^1.3.2",
         "ionic-angular": "3.5.0",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "3.0.0",
+        "plugman": "^1.4.1",
         "rxjs": "5.4.0",
-        "situm-cordova-plugin": "file:../situm-cordova-plugin",
+        "situm-cordova-plugin": "git+https://github.com/cocodinTech/situm-cordova-plugin.git",
         "supports-color": "^4.1.0",
         "sw-toolbox": "3.6.0",
         "zone.js": "0.8.12"
@@ -49,13 +55,13 @@
     "description": "Getting started android hybrid app for testing Cordova-based situm plugin.",
     "cordova": {
         "plugins": {
-            "situm-cordova-plugin": {},
             "cordova-plugin-console": {},
             "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
-            "ionic-plugin-keyboard": {}
+            "ionic-plugin-keyboard": {},
+            "situm-cordova-plugin": {}
         },
         "platforms": [
             "android"
