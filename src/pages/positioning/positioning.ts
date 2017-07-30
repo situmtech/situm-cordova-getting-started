@@ -16,15 +16,15 @@ declare var cordova: any;
 })
 export class PositioningPage {
 
-  buildingId : string = '';
+  buildingIdentifier : string = '';
 
   buildingName : string = '';
 
   positioning : boolean = false;
 
   position: any = {
-    status_name : '',
-    floor_id : '',
+    statusName : '',
+    floorIdentifier : '',
     x : -1,
     y : -1,
     accuracy : -1,
@@ -32,8 +32,8 @@ export class PositioningPage {
   }
 
   constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams) {
-    this.buildingId = navParams.get("building_id");
-    this.buildingName = navParams.get("building_name");
+    this.buildingIdentifier = navParams.get("buildingIdentifier");
+    this.buildingName = navParams.get("buildingName");
   }
 
   ionViewDidEnter() {
@@ -45,8 +45,8 @@ export class PositioningPage {
         return;
       }
       let buildings = [{
-        'building_id' : this.buildingId,
-        'building_name' : this.buildingName
+        'buildingIdentifier' : this.buildingIdentifier,
+        'buildingName' : this.buildingName
       }];
       //pass building object to start positioning
       this.positioning = true;
