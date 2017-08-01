@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Platform } from 'ionic-angular';
+import { NavController, NavParams, Platform, Events } from 'ionic-angular';
 
 /**
  * Generated class for the PositioningPage page.
@@ -16,46 +16,58 @@ declare var cordova: any;
 })
 export class PositioningPage {
 
-  buildingIdentifier : string = '';
+  building: any;
 
-  buildingName : string = '';
+  buildingIdentifier: string = '';
 
-  positioning : boolean = false;
+  buildingName: string = '';
+
+  positioning: boolean = false;
 
   position: any = {
-    statusName : '',
-    floorIdentifier : '',
-    x : -1,
-    y : -1,
-    accuracy : -1,
-    bearing : ''
+    statusName: '',
+    floorIdentifier: '',
+    x: -1,
+    y: -1,
+    accuracy: -1,
+    bearing: ''
   }
 
-  constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams) {
-    this.buildingIdentifier = navParams.get("buildingIdentifier");
-    this.buildingName = navParams.get("buildingName");
+  constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams, public events: Events) {
+    this.building = this.navParams.get('building');
   }
 
-  ionViewDidEnter() {
-  }
+  ionViewDidEnter() { }
 
   private startPositioning() {
-      if (this.positioning == true) {
-        console.log("Position listener is already enabled.");
-        return;
-      }
-      let buildings = [{
-        'buildingIdentifier' : this.buildingIdentifier,
-        'buildingName' : this.buildingName
-      }];
-      //pass building object to start positioning
-      this.positioning = true;
-      cordova.plugins.Situm.startPositioning(buildings,(res) => {
-        setTimeout(() => {
-          console.log('Position updated: ' + JSON.stringify(res));
-          this.position = res;
-        }, 250);
+    if (this.positioning == true) {
+      console.log("Position listener is already enabled.");
+      return;
+    }
+    let buildings = [{
+      'buildingIdentifier': this.building.buildingIdentifier,
+      'name': this.building.name
+    }];
+    //pass building object to start positioning
+    this.positioning = true;
+
+    // cordova.plugins.Situm.startPositioning(buildings, (res) => {
+    //   this.position = res;
+    //   console.log('Position updated: ' + JSON.stringify(res));
+    // });
+    this.initPositioning(buildings);
+
+  }
+
+  private initPositioning(buildings) {
+    cordova.plugins.Situm.startPositioning(buildings, (res) => {
+      return new Promise((resolve, reject) => {
+        resolve(res);
+      }).then((data: any) => {
+        this.position = data;
+        console.log(this.position);
       });
+    });
   }
 
   private stopPositioning() {
@@ -64,8 +76,7 @@ export class PositioningPage {
       return;
     }
     this.positioning = false;
-    cordova.plugins.Situm.stopPositioning((res) => {
-    });
+    cordova.plugins.Situm.stopPositioning(() => { });
   }
 
   ionViewWillLeave() {

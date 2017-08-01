@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
-import {PositioningPage} from '../positioning/positioning';
+import { PositioningPage } from '../positioning/positioning';
 
 declare var cordova: any;
 
@@ -12,33 +12,29 @@ declare var cordova: any;
 
 export class HomePage {
 
-  buildings: any[] = [];
+  public buildings: any[] = [];
 
-  constructor(public platform: Platform, public navCtrl: NavController) {
-    
-  };
+  constructor(public platform: Platform, public navCtrl: NavController) { };
 
-  ionViewDidLoad() {
-    this.platform.ready().then((res) => {
+  ionViewDidEnter() {
+    this.platform.ready().then(() => {
       cordova.plugins.Situm.setApiKey("alberto.doval@cocodin.com", "391b363b6f1a00acf10f67471380980dcdf989ffafc08601229b6c67bb4d1a11");
-      this.fetchBuildings();
+      this.fetchBuildings().then((data: any) => {
+        this.buildings = data;
+      })
     });
   };
 
-  ionViewDidEnter() {
-    this.fetchBuildings();
-  };
-
-  private fetchBuildings() {
-    cordova.plugins.Situm.fetchBuildings((res) => {
-      setTimeout(() => {
-        this.buildings = res;
-      }, 250);
+  public fetchBuildings() {
+    return new Promise((resolve, reject) => {
+      return cordova.plugins.Situm.fetchBuildings((res) => {
+        resolve(res);
+      });
     });
   };
 
   goToPositioning(item) {
-    this.navCtrl.push(PositioningPage, item);
+    this.navCtrl.push(PositioningPage, { building: item });
   }
 
 }

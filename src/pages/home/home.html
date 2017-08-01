@@ -7,10 +7,10 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list padding>
+  <ion-list *ngIf="buildings">
     <ion-item *ngFor="let building of buildings" (click)="goToPositioning(building)">
-      <h3>{{building.buildingIdentifier}}</h3>
-      <h3>{{building.buildingName}}</h3>
+      <p>{{building.buildingIdentifier}}</p>
+      <p>{{building.name}}</p>
     </ion-item>
   </ion-list>
 </ion-content>
