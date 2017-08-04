@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams, Platform, Events } from 'ionic-angular';
+import { Component, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
+import { NavController, NavParams, Platform, Events, LoadingController } from 'ionic-angular';
+import { DomSanitizer } from '@angular/platform-browser';
 
 /**
  * Generated class for the PositioningPage page.
@@ -9,6 +10,7 @@ import { NavController, NavParams, Platform, Events } from 'ionic-angular';
  */
 
 declare var cordova: any;
+declare var google: any;
 
 @Component({
   selector: 'page-positioning',
@@ -33,11 +35,15 @@ export class PositioningPage {
     bearing: ''
   }
 
-  constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams, public events: Events) {
+  image: any;
+
+  @ViewChild('map') mapElement: ElementRef;
+  map: any;
+
+  constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams, public events: Events, public detector: ChangeDetectorRef,
+    public sanitizer: DomSanitizer, public loadingCtrl: LoadingController) {
     this.building = this.navParams.get('building');
   }
-
-  ionViewDidEnter() { }
 
   private startPositioning() {
     if (this.positioning == true) {
@@ -48,25 +54,11 @@ export class PositioningPage {
       'buildingIdentifier': this.building.buildingIdentifier,
       'name': this.building.name
     }];
-    //pass building object to start positioning
     this.positioning = true;
 
-    // cordova.plugins.Situm.startPositioning(buildings, (res) => {
-    //   this.position = res;
-    //   console.log('Position updated: ' + JSON.stringify(res));
-    // });
-    this.initPositioning(buildings);
-
-  }
-
-  private initPositioning(buildings) {
     cordova.plugins.Situm.startPositioning(buildings, (res) => {
-      return new Promise((resolve, reject) => {
-        resolve(res);
-      }).then((data: any) => {
-        this.position = data;
-        console.log(this.position);
-      });
+      this.position = res;
+      this.detector.detectChanges();
     });
   }
 
@@ -77,6 +69,41 @@ export class PositioningPage {
     }
     this.positioning = false;
     cordova.plugins.Situm.stopPositioning(() => { });
+  }
+
+  private showMap() {
+    if (!this.map) {
+      let loading = this.loadingCtrl.create({
+        content: "Cargando mapa..."
+      });
+      loading.present();
+      cordova.plugins.Situm.fetchFloorsFromBuilding(this.building, (res) => {
+        let floor = res[0];
+        cordova.plugins.Situm.fetchMapFromFloor(floor, (res) => {
+          this.image = this.sanitizer.bypassSecurityTrustResourceUrl("data:image/png;base64," + res.data);
+          console.log(this.building);
+          let latlng = new google.maps.LatLng(this.building.center.latitude, this.building.center.longitude);
+
+          let mapOptions = {
+            center: latlng,
+            zoom: 18,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+
+          let mapEle = this.mapElement.nativeElement;
+
+          this.map = new google.maps.Map(mapEle, mapOptions);
+          google.maps.event.addListenerOnce(this.map, 'idle', () => {
+            loading.dismiss();
+          });
+          let boundsNE = new google.maps.LatLng(this.building.bounds.northEast.latitude, this.building.bounds.northEast.longitude);
+          let boundsSW = new google.maps.LatLng(this.building.bounds.southWest.latitude, this.building.bounds.southWest.longitude);
+          let boundsOverlay = new google.maps.LatLngBounds(boundsSW, boundsNE);
+          let overlay = new google.maps.GroundOverlay(floor.mapUrl, boundsOverlay);
+          overlay.setMap(this.map);
+        });
+      });
+    }
   }
 
   ionViewWillLeave() {

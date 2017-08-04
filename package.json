@@ -33,6 +33,7 @@
         "cordova-lib": "^7.0.0",
         "cordova-plugin-console": "^1.0.7",
         "cordova-plugin-device": "^1.1.6",
+        "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
         "cordova-plugin-splashscreen": "^4.0.3",
         "cordova-plugin-statusbar": "^2.2.3",
         "cordova-plugin-whitelist": "^1.3.2",
@@ -41,7 +42,7 @@
         "ionicons": "3.0.0",
         "plugman": "^1.4.1",
         "rxjs": "5.4.0",
-        "situm-cordova-plugin": "git+https://github.com/cocodinTech/situm-cordova-plugin.git",
+        "situm-cordova-plugin": "git+https://github.com/cocodinTech/situm-cordova-plugin.git#dev",
         "supports-color": "^4.1.0",
         "sw-toolbox": "3.6.0",
         "zone.js": "0.8.12"
@@ -61,7 +62,10 @@
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
             "ionic-plugin-keyboard": {},
-            "situm-cordova-plugin": {}
+            "situm-cordova-plugin": {},
+            "cordova-plugin-googlemaps": {
+                "API_KEY_FOR_ANDROID": "AIzaSyD3RIddnImiOjtE0ep8mV6FrXEEcc6Uaz8"
+            }
         },
         "platforms": [
             "android"

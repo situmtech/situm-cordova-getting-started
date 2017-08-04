@@ -22,7 +22,7 @@
     <ion-label>
       STATUS
     </ion-label>
-    <div item-content>
+    <div item-content *ngIf="position.statusName">
       {{position.statusName}}
     </div>
   </ion-item>
@@ -30,7 +30,7 @@
     <ion-label>
       FLOOR ID.
     </ion-label>
-    <div item-content>
+    <div item-content *ngIf="position.floorIdentifier">
       {{position.floorIdentifier}}
     </div>
   </ion-item>
@@ -38,32 +38,36 @@
     <ion-label>
       X
     </ion-label>
-    <div item-content>
-      {{position.x}}
+    <div item-content *ngIf="position.cartesianCoordinate">
+      {{position.cartesianCoordinate.x}}
     </div>
   </ion-item>
   <ion-item>
     <ion-label>
       Y
     </ion-label>
-    <div item-content>
-      {{position.y}}
+    <div item-content *ngIf="position.cartesianCoordinate">
+      {{position.cartesianCoordinate.y}}
     </div>
   </ion-item>
   <ion-item>
     <ion-label>
       ACCURACY
     </ion-label>
-    <div item-content>
+    <div item-content *ngIf="position.accuracy">
       {{position.accuracy}}
     </div>
   </ion-item>
-  <ion-item>
-    <ion-label>
-      BEARING
-    </ion-label>
-    <div item-content>
-      {{position.bearing}}
-    </div>
-  </ion-item>
+  <ion-row>
+    <ion-col>
+      <button ion-button small full color="light" (click)="showMap()">Show map.</button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-content class="map">
+        <div #map id="map"></div>
+      </ion-content>
+    </ion-col>
+  </ion-row>
 </ion-content>
