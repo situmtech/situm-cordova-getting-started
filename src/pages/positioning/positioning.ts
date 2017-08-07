@@ -45,6 +45,23 @@ export class PositioningPage {
     this.building = this.navParams.get('building');
   }
 
+  ionViewDidEnter() {
+    this.platform.ready().then(() => {
+      cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(this.building, (res: any) => {
+        console.log(res);
+      });
+      cordova.plugins.Situm.fetchOutdoorPOIsFromBuilding(this.building, (res: any) => {
+        console.log(res);
+      });
+      cordova.plugins.Situm.fetchEventsFromBuilding(this.building, (res: any) => {
+        console.log(res);
+      });
+      cordova.plugins.Situm.fetchPoiCategories((res: any) => {
+        console.log(res);
+      });
+    });
+  }
+
   private startPositioning() {
     if (this.positioning == true) {
       console.log("Position listener is already enabled.");
@@ -56,7 +73,7 @@ export class PositioningPage {
     }];
     this.positioning = true;
 
-    cordova.plugins.Situm.startPositioning(buildings, (res) => {
+    cordova.plugins.Situm.startPositioning(buildings, (res: any) => {
       this.position = res;
       this.detector.detectChanges();
     });
@@ -81,13 +98,13 @@ export class PositioningPage {
         let floor = res[0];
         cordova.plugins.Situm.fetchMapFromFloor(floor, (res) => {
           this.image = this.sanitizer.bypassSecurityTrustResourceUrl("data:image/png;base64," + res.data);
-          console.log(this.building);
           let latlng = new google.maps.LatLng(this.building.center.latitude, this.building.center.longitude);
 
           let mapOptions = {
             center: latlng,
             zoom: 18,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            heading: this.building.rotation
           };
 
           let mapEle = this.mapElement.nativeElement;

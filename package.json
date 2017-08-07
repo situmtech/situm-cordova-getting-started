@@ -62,10 +62,10 @@
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
             "ionic-plugin-keyboard": {},
-            "situm-cordova-plugin": {},
             "cordova-plugin-googlemaps": {
                 "API_KEY_FOR_ANDROID": "AIzaSyD3RIddnImiOjtE0ep8mV6FrXEEcc6Uaz8"
-            }
+            },
+            "situm-cordova-plugin": {}
         },
         "platforms": [
             "android"
