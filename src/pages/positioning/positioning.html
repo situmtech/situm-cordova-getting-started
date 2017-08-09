@@ -18,46 +18,11 @@
     <button ion-button item-start color="light" (click)="startPositioning()">Start positioning.</button>
     <button ion-button item-end color="dark" (click)="stopPositioning()">Stop Positioning.</button>
   </ion-list-header>
-  <ion-item>
-    <ion-label>
-      STATUS
-    </ion-label>
-    <div item-content *ngIf="position.statusName">
-      {{position.statusName}}
-    </div>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      FLOOR ID.
-    </ion-label>
-    <div item-content *ngIf="position.floorIdentifier">
-      {{position.floorIdentifier}}
-    </div>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      X
-    </ion-label>
-    <div item-content *ngIf="position.cartesianCoordinate">
-      {{position.cartesianCoordinate.x}}
-    </div>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Y
-    </ion-label>
-    <div item-content *ngIf="position.cartesianCoordinate">
-      {{position.cartesianCoordinate.y}}
-    </div>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      ACCURACY
-    </ion-label>
-    <div item-content *ngIf="position.accuracy">
-      {{position.accuracy}}
-    </div>
-  </ion-item>
+  <ion-row>
+    <ion-col>
+      <button ion-button small full color="light" (click)="showPois()">Show POIs</button>
+    </ion-col>
+  </ion-row>
   <ion-row>
     <ion-col>
       <button ion-button small full color="light" (click)="showMap()">Show map.</button>
