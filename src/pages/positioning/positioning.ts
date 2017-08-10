@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { NavController, NavParams, Platform, Events, LoadingController } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon } from '@ionic-native/google-maps';
+import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker } from '@ionic-native/google-maps';
 import { File, IWriteOptions } from '@ionic-native/file'
 
 /**
@@ -70,15 +70,28 @@ export class PositioningPage {
       console.log("Position listener is already enabled.");
       return;
     }
-    let buildings = [{
-      'buildingIdentifier': this.building.buildingIdentifier,
-      'name': this.building.name
-    }];
-    this.positioning = true;
-
-    cordova.plugins.Situm.startPositioning(buildings, (res: any) => {
-      this.position = res;
-      this.detector.detectChanges();
+    this.platform.ready().then(() => {
+      let buildings = [this.building];
+      this.positioning = true;
+      if (this.map) {
+        let defaultOptions: MarkerOptions = {
+          title: 'Current position'
+        };
+        this.map.addMarker(defaultOptions).then((marker: Marker) => {
+          cordova.plugins.Situm.startPositioning(buildings, (res: any) => {
+            this.position = res;
+            if (this.position.coordinate) {
+              let position: ILatLng = {
+                lat: this.position.coordinate.latitude,
+                lng: this.position.coordinate.longitude
+              };
+              marker.setPosition(position);
+              console.log(marker);
+              this.detector.detectChanges();
+            }
+          });
+        });
+      }
     });
   }
 
@@ -116,7 +129,6 @@ export class PositioningPage {
 
           };
           this.map.addMarker(markerOptions);
-          console.log(element);
         });
       }
     });
@@ -129,7 +141,6 @@ export class PositioningPage {
           content: "Cargando mapa..."
         });
         loading.present();
-        console.log(this.building);
         cordova.plugins.Situm.fetchFloorsFromBuilding(this.building, (res) => {
           let floor = res[0];
           cordova.plugins.Situm.fetchMapFromFloor(floor, (res) => {
