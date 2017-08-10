@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { NavController, NavParams, Platform, Events, LoadingController } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker } from '@ionic-native/google-maps';
+import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions } from '@ionic-native/google-maps';
 import { File, IWriteOptions } from '@ionic-native/file'
 
 /**
@@ -37,8 +37,10 @@ export class PositioningPage {
   }
 
   image: Blob;
-  map: any;
+  map: GoogleMap;
   poiCategories: any[];
+  marker: Marker;
+  pois: any[];
 
   constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams, public events: Events, public detector: ChangeDetectorRef,
     public sanitizer: DomSanitizer, public loadingCtrl: LoadingController, public googleMaps: GoogleMaps, public file: File) {
@@ -78,6 +80,7 @@ export class PositioningPage {
           title: 'Current position'
         };
         this.map.addMarker(defaultOptions).then((marker: Marker) => {
+          this.marker = marker;
           cordova.plugins.Situm.startPositioning(buildings, (res: any) => {
             this.position = res;
             if (this.position.coordinate) {
@@ -85,8 +88,7 @@ export class PositioningPage {
                 lat: this.position.coordinate.latitude,
                 lng: this.position.coordinate.longitude
               };
-              marker.setPosition(position);
-              console.log(marker);
+              this.marker.setPosition(position);
               this.detector.detectChanges();
             }
           });
@@ -95,17 +97,38 @@ export class PositioningPage {
     });
   }
 
+  private showRoute() {
+    if (this.map && this.pois) {
+      cordova.plugins.Situm.requestDirections([this.pois[1], this.pois[2]], (route: any) => {
+        let polylineOptions: PolylineOptions = {
+          color: "#754967",
+          width: 4,
+          points: []
+        };
+        route.points.forEach(point => {
+          polylineOptions.points.push({
+            lat: point.coordinate.latitude,
+            lng: point.coordinate.longitude
+          });
+        });
+        this.map.addPolyline(polylineOptions);
+      });
+    }
+  }
+
   private stopPositioning() {
     if (this.positioning == false) {
       console.log("Position listener is not enabled.");
       return;
     }
     this.positioning = false;
+    if (this.marker) this.marker.remove();
     cordova.plugins.Situm.stopPositioning(() => { });
   }
 
   private showPois() {
     cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(this.building, (res: any) => {
+      this.pois = res;
       if (this.poiCategories && this.map) {
         res.forEach(element => {
           let category = this.poiCategories.find((poiCategory: any) => {
