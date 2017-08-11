@@ -176,7 +176,7 @@ export class PositioningPage {
             let options: GoogleMapOptions = {
               camera: {
                 target: center,
-                zoom: 19
+                zoom: 20
               }
             };
             this.map = this.googleMaps.create(element, options);
@@ -198,10 +198,15 @@ export class PositioningPage {
                   loading.dismiss();
                 }).catch((err: any) => {
                   console.log(err);
+                  loading.dismiss();
                 });
               }).catch((err: any) => {
                 console.log(err);
+                loading.dismiss();
               });
+            }).catch((err: any) => {
+              console.error(err);
+              loading.dismiss();
             });
           });
         });
