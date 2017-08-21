@@ -2,7 +2,6 @@ import { Component, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/co
 import { NavController, NavParams, Platform, Events, LoadingController } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions } from '@ionic-native/google-maps';
-import { File, IWriteOptions } from '@ionic-native/file'
 
 /**
  * Generated class for the PositioningPage page.
@@ -36,14 +35,13 @@ export class PositioningPage {
     bearing: ''
   }
 
-  image: Blob;
   map: GoogleMap;
   poiCategories: any[];
   marker: Marker;
   pois: any[];
 
   constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams, public events: Events, public detector: ChangeDetectorRef,
-    public sanitizer: DomSanitizer, public loadingCtrl: LoadingController, public googleMaps: GoogleMaps, public file: File) {
+    public sanitizer: DomSanitizer, public loadingCtrl: LoadingController, public googleMaps: GoogleMaps) {
     this.building = this.navParams.get('building');
   }
 
@@ -167,10 +165,6 @@ export class PositioningPage {
         cordova.plugins.Situm.fetchFloorsFromBuilding(this.building, (res) => {
           let floor = res[0];
           cordova.plugins.Situm.fetchMapFromFloor(floor, (res) => {
-            this.image = this.b64toBlob(res.data, "image/png", 512);
-            let imageOptions: IWriteOptions = {
-              replace: true
-            }
             let element: HTMLElement = document.getElementById('map');
             let center: LatLng = new LatLng(this.building.center.latitude, this.building.center.longitude);
             let options: GoogleMapOptions = {
@@ -188,18 +182,13 @@ export class PositioningPage {
                 { lat: this.building.bounds.southWest.latitude, lng: this.building.bounds.southWest.longitude },
                 { lat: this.building.bounds.northEast.latitude, lng: this.building.bounds.northEast.longitude }
               ];
-              this.file.writeFile(this.file.externalApplicationStorageDirectory + "files", "mapa.png", this.image, imageOptions).then(() => {
-                let groundOptions: GroundOverlayOptions = {
-                  bounds: bounds,
-                  url: this.file.externalApplicationStorageDirectory + "files/mapa.png",
-                  bearing: this.building.rotation * 180 / Math.PI
-                }
-                this.map.addGroundOverlay(groundOptions).then(() => {
-                  loading.dismiss();
-                }).catch((err: any) => {
-                  console.log(err);
-                  loading.dismiss();
-                });
+              let groundOptions: GroundOverlayOptions = {
+                bounds: bounds,
+                url: floor.mapUrl,
+                bearing: this.building.rotation * 180 / Math.PI
+              }
+              this.map.addGroundOverlay(groundOptions).then(() => {
+                loading.dismiss();
               }).catch((err: any) => {
                 console.log(err);
                 loading.dismiss();
@@ -216,31 +205,6 @@ export class PositioningPage {
 
   ionViewWillLeave() {
     this.stopPositioning();
-  }
-
-  // convert base64 to Blob
-  b64toBlob(b64Data, contentType, sliceSize) {
-    let byteCharacters = atob(b64Data);
-
-    let byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      let slice = byteCharacters.slice(offset, offset + sliceSize);
-
-      let byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      let byteArray = new Uint8Array(byteNumbers);
-
-      byteArrays.push(byteArray);
-
-    }
-
-    let blob = new Blob(byteArrays, { type: contentType });
-
-    return blob;
   }
 
 }
