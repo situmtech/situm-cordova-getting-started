@@ -159,12 +159,9 @@ export class PositioningPage {
           let html = "<html><b>Test html infowindow</b></html>";
           let infoWindow = new HtmlInfoWindow();
           infoWindow.setContent(html);
-          console.log(GoogleMapsEvent.MARKER_CLICK);
           this.map.addMarker(markerOptions).then((marker: Marker) => {
             console.log(marker.getId());
             marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
-              console.log(infoWindow);
-              console.log(marker);
               infoWindow.open(marker);
             });
           });
