@@ -156,7 +156,7 @@ export class PositioningPage {
             icon: icon,
             position: markerPosition
           };
-          let html = "<html><b>Merda</b></html>";
+          let html = "<html><b>Test html infowindow</b></html>";
           let infoWindow = new HtmlInfoWindow();
           infoWindow.setContent(html);
           console.log(GoogleMapsEvent.MARKER_CLICK);
