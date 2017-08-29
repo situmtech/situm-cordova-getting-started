@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { NavController, NavParams, Platform, Events, LoadingController } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions } from '@ionic-native/google-maps';
+import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions, HtmlInfoWindow } from '@ionic-native/google-maps';
 
 /**
  * Generated class for the PositioningPage page.
@@ -20,8 +20,6 @@ export class PositioningPage {
 
   building: any;
 
-  buildingIdentifier: string = '';
-
   buildingName: string = '';
 
   positioning: boolean = false;
@@ -35,13 +33,23 @@ export class PositioningPage {
     bearing: ''
   }
 
+  floor: any;
+
   map: GoogleMap;
   poiCategories: any[];
   marker: Marker;
   pois: any[];
 
-  constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams, public events: Events, public detector: ChangeDetectorRef,
-    public sanitizer: DomSanitizer, public loadingCtrl: LoadingController, public googleMaps: GoogleMaps) {
+  constructor(
+    public platform: Platform,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public events: Events,
+    public detector: ChangeDetectorRef,
+    public sanitizer: DomSanitizer,
+    public loadingCtrl: LoadingController,
+    public googleMaps: GoogleMaps
+  ) {
     this.building = this.navParams.get('building');
   }
 
@@ -146,10 +154,20 @@ export class PositioningPage {
           }
           let markerOptions: MarkerOptions = {
             icon: icon,
-            position: markerPosition,
-
+            position: markerPosition
           };
-          this.map.addMarker(markerOptions);
+          let html = "<html><b>Merda</b></html>";
+          let infoWindow = new HtmlInfoWindow();
+          infoWindow.setContent(html);
+          console.log(GoogleMapsEvent.MARKER_CLICK);
+          this.map.addMarker(markerOptions).then((marker: Marker) => {
+            console.log(marker.getId());
+            marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
+              console.log(infoWindow);
+              console.log(marker);
+              infoWindow.open(marker);
+            });
+          });
         });
       }
     });
@@ -163,8 +181,8 @@ export class PositioningPage {
         });
         loading.present();
         cordova.plugins.Situm.fetchFloorsFromBuilding(this.building, (res) => {
-          let floor = res[0];
-          cordova.plugins.Situm.fetchMapFromFloor(floor, (res) => {
+          this.floor = res[0];
+          cordova.plugins.Situm.fetchMapFromFloor(this.floor, (res) => {
             let element: HTMLElement = document.getElementById('map');
             let center: LatLng = new LatLng(this.building.center.latitude, this.building.center.longitude);
             let options: GoogleMapOptions = {
@@ -184,7 +202,7 @@ export class PositioningPage {
               ];
               let groundOptions: GroundOverlayOptions = {
                 bounds: bounds,
-                url: floor.mapUrl,
+                url: this.floor.mapUrl,
                 bearing: this.building.rotation * 180 / Math.PI
               }
               this.map.addGroundOverlay(groundOptions).then(() => {
