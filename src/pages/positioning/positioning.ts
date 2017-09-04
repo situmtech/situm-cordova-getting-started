@@ -97,6 +97,8 @@ export class PositioningPage {
               this.marker.setPosition(position);
               this.detector.detectChanges();
             }
+          }, (err: any) => {
+            console.log(err);
           });
         });
       }
@@ -105,7 +107,8 @@ export class PositioningPage {
 
   private showRoute() {
     if (this.map && this.pois) {
-      cordova.plugins.Situm.requestDirections([this.pois[1], this.pois[2]], (route: any) => {
+      cordova.plugins.Situm.requestDirections([this.pois[0], this.pois[1]], (route: any) => {
+        console.log(route);
         let polylineOptions: PolylineOptions = {
           color: "#754967",
           width: 4,
@@ -118,6 +121,8 @@ export class PositioningPage {
           });
         });
         this.map.addPolyline(polylineOptions);
+      }, (err: any) => {
+        console.error(err);
       });
     }
   }
@@ -160,7 +165,6 @@ export class PositioningPage {
           let infoWindow = new HtmlInfoWindow();
           infoWindow.setContent(html);
           this.map.addMarker(markerOptions).then((marker: Marker) => {
-            console.log(marker.getId());
             marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
               infoWindow.open(marker);
             });
