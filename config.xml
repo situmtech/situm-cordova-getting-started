@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="es.situm.cordova" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Situm Cordova Android Getting Started</name>
+    <name>Situm Cordova Getting Started</name>
     <description />
-    <author email="situm@situm.es" href="https://www.situm.es">Situm Technologies S.L.</author>
+    <author email="hello@cocodin.com" href="http://www.cocodin.com">Cocodin Technology S.L.</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="http://*/*" />
@@ -81,19 +81,19 @@
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
     </platform>
     <engine name="browser" spec="^4.1.0" />
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <plugin name="situm-cordova-plugin" spec="https://github.com/cocodinTech/situm-cordova-plugin.git" />
+    <plugin name="cordova-plugin-cocoapod-support" spec="^1.3.0" />
     <plugin name="cordova-plugin-console" spec="^1.0.7" />
     <plugin name="cordova-plugin-device" spec="^1.1.6" />
-    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
-    <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
-    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <plugin name="cordova-plugin-cocoapod-support" spec="^1.3.0" />
-    <plugin name="cordova-plugin-googlemaps" spec="git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps">
+    <plugin name="cordova-plugin-googlemaps" spec="https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyD3RIddnImiOjtE0ep8mV6FrXEEcc6Uaz8" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyDNN18tWO2MVvC3dhx2H9WiuGyhdk5cbbY" />
         <variable name="LOCATION_WHEN_IN_USE_DESCRIPTION" value="Show your location on the map" />
         <variable name="LOCATION_ALWAYS_USAGE_DESCRIPTION" value="Trace your location on the map" />
     </plugin>
-    <plugin name="situm-cordova-plugin" spec="https://github.com/cocodinTech/situm-cordova-plugin.git" />
+    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <engine name="ios" spec="~4.4.0" />
 </widget>
