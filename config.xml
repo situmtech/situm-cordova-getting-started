@@ -47,8 +47,10 @@
         </config-file>
     </platform>
     <platform name="ios">
+        <hook src="hooks/hook-symlink-fix.js" type="before_compile" />
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+        <allow-navigation href="*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
         <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
         <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
@@ -81,12 +83,11 @@
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
     </platform>
     <engine name="browser" spec="^4.1.0" />
-    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <plugin name="situm-cordova-plugin" spec="https://github.com/cocodinTech/situm-cordova-plugin.git" />
+    <engine name="ios" spec="^4.4.0" />
     <plugin name="cordova-plugin-cocoapod-support" spec="^1.3.0" />
     <plugin name="cordova-plugin-console" spec="^1.0.7" />
     <plugin name="cordova-plugin-device" spec="^1.1.6" />
-    <plugin name="cordova-plugin-googlemaps" spec="https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps">
+    <plugin name="cordova-plugin-googlemaps" spec="git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyD3RIddnImiOjtE0ep8mV6FrXEEcc6Uaz8" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyDNN18tWO2MVvC3dhx2H9WiuGyhdk5cbbY" />
         <variable name="LOCATION_WHEN_IN_USE_DESCRIPTION" value="Show your location on the map" />
@@ -95,5 +96,6 @@
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
-    <engine name="ios" spec="~4.4.0" />
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <plugin name="situm-cordova-plugin" spec="git+https://github.com/cocodinTech/situm-cordova-plugin.git" />
 </widget>

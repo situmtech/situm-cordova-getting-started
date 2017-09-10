@@ -25,6 +25,7 @@
         "@ionic-native/splash-screen": "3.12.1",
         "@ionic-native/status-bar": "3.12.1",
         "@ionic/storage": "2.0.1",
+        "amdefine": "^1.0.1",
         "browser-sync": "^2.18.12",
         "cordova-browser": "^4.1.0",
         "cordova-cli": "^1.0.0",
