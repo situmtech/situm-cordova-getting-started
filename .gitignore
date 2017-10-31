@@ -33,3 +33,4 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 info\.txt
+*.DS_Store
