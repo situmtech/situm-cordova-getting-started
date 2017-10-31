@@ -1,85 +1,87 @@
 {
-    "name": "situm-cordova-getting-started",
-    "version": "0.0.1",
-    "author": "Cocodin Technolgy SL",
-    "homepage": "http://www.cocodin.com",
-    "private": true,
-    "scripts": {
-        "clean": "ionic-app-scripts clean",
-        "build": "ionic-app-scripts build",
-        "lint": "ionic-app-scripts lint",
-        "ionic:build": "ionic-app-scripts build",
-        "ionic:serve": "ionic-app-scripts serve"
+  "name": "situm-cordova-getting-started",
+  "version": "0.0.1",
+  "author": "Cocodin Technolgy SL",
+  "homepage": "http://www.cocodin.com",
+  "description": "Getting started android hybrid app for testing Cordova-based situm plugin.",
+  "private": true,
+  "scripts": {
+    "build": "ionic-app-scripts build",
+    "clean": "ionic-app-scripts clean",
+    "lint": "ionic-app-scripts lint",
+    "ionic:build": "npm run build",
+    "ionic:serve": "npm run serve",
+    "ionic:lint": "npm run lint"
+  },
+  "dependencies": {
+    "@angular/common": "4.4.3",
+    "@angular/compiler": "4.4.3",
+    "@angular/compiler-cli": "4.4.3",
+    "@angular/core": "4.4.3",
+    "@angular/forms": "4.4.3",
+    "@angular/http": "4.4.3",
+    "@angular/platform-browser": "4.4.3",
+    "@angular/platform-browser-dynamic": "4.4.3",
+    "@ionic-native/core": "4.3.1",
+    "@ionic-native/google-maps": "4.3.1",
+    "@ionic-native/splash-screen": "4.3.1",
+    "@ionic-native/status-bar": "4.3.1",
+    "@ionic/storage": "2.0.1",
+    "amdefine": "^1.0.1",
+    "browser-sync": "^2.18.12",
+    "cordova-browser": "^4.1.0",
+    "cordova-cli": "^1.0.0",
+    "cordova-cli-lib": "^0.6.0",
+    "cordova-common": "^2.0.3",
+    "cordova-create": "^1.1.0",
+    "cordova-fetch": "^1.1.0",
+    "cordova-lib": "^7.0.0",
+    "cordova-plugin-cocoapod-support": "^1.3.0",
+    "cordova-plugin-console": "^1.0.7",
+    "cordova-plugin-device": "^1.1.6",
+    "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
+    "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git",
+    "cordova-plugin-splashscreen": "^4.0.3",
+    "cordova-plugin-statusbar": "^2.2.3",
+    "cordova-plugin-whitelist": "^1.3.2",
+    "ionic-angular": "^3.6.1",
+    "ionic-plugin-keyboard": "^2.2.1",
+    "ionicons": "3.0.0",
+    "plugman": "^1.4.1",
+    "rxjs": "5.4.3",
+    "simctl": "^1.0.1",
+    "situm-cordova-plugin": "git+https://github.com/cocodinTech/situm-cordova-plugin.git#develop-with-dependencies",
+    "supports-color": "^4.1.0",
+    "sw-toolbox": "3.6.0",
+    "zone.js": "0.8.18"
+  },
+  "devDependencies": {
+    "@ionic/app-scripts": "3.0.0",
+    "ionic": "3.13.2",
+    "typescript": "~2.3.2"
+  },
+  "config": {
+    "ionic_aot_write_to_disk": true
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-whitelist": {},
+      "ionic-plugin-keyboard": {},
+      "cordova-plugin-console": {},
+      "cordova-plugin-googlemaps": {
+        "API_KEY_FOR_ANDROID": "AIzaSyD3RIddnImiOjtE0ep8mV6FrXEEcc6Uaz8",
+        "API_KEY_FOR_IOS": "AIzaSyDNN18tWO2MVvC3dhx2H9WiuGyhdk5cbbY",
+        "LOCATION_WHEN_IN_USE_DESCRIPTION": "Show your location on the map",
+        "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Trace your location on the map"
+      },
+      "cordova-plugin-cocoapod-support": {},
+      "situm-cordova-plugin": {}
     },
-    "dependencies": {
-        "@angular/common": "4.1.3",
-        "@angular/compiler": "4.1.3",
-        "@angular/compiler-cli": "4.1.3",
-        "@angular/core": "4.1.3",
-        "@angular/forms": "4.1.3",
-        "@angular/http": "4.1.3",
-        "@angular/platform-browser": "4.1.3",
-        "@angular/platform-browser-dynamic": "4.1.3",
-        "@ionic-native/core": "^4.2.0",
-        "@ionic-native/google-maps": "^4.2.1",
-        "@ionic-native/splash-screen": "3.12.1",
-        "@ionic-native/status-bar": "3.12.1",
-        "@ionic/storage": "2.0.1",
-        "amdefine": "^1.0.1",
-        "browser-sync": "^2.18.12",
-        "cordova-browser": "^4.1.0",
-        "cordova-cli": "^1.0.0",
-        "cordova-common": "^2.0.3",
-        "cordova-create": "^1.1.0",
-        "cordova-fetch": "^1.1.0",
-        "cordova-ios": "^4.4.0",
-        "cordova-lib": "^7.0.0",
-        "cordova-plugin-cocoapod-support": "^1.3.0",
-        "cordova-plugin-console": "^1.0.7",
-        "cordova-plugin-device": "^1.1.6",
-        "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
-        "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git",
-        "cordova-plugin-splashscreen": "^4.0.3",
-        "cordova-plugin-statusbar": "^2.2.3",
-        "cordova-plugin-whitelist": "^1.3.2",
-        "ionic-angular": "3.5.0",
-        "ionic-plugin-keyboard": "^2.2.1",
-        "ionicons": "3.0.0",
-        "plugman": "^1.4.1",
-        "rxjs": "5.4.0",
-        "situm-cordova-plugin": "git+https://github.com/cocodinTech/situm-cordova-plugin.git",
-        "supports-color": "^4.1.0",
-        "sw-toolbox": "3.6.0",
-        "zone.js": "0.8.12"
-    },
-    "devDependencies": {
-        "@ionic/app-scripts": "1.3.12",
-        "@ionic/cli-plugin-cordova": "1.6.2",
-        "@ionic/cli-plugin-ionic-angular": "1.4.1",
-        "ionic": "3.9.2",
-        "typescript": "2.3.4"
-    },
-    "description": "Getting started android hybrid app for testing Cordova-based situm plugin.",
-    "cordova": {
-        "plugins": {
-            "cordova-plugin-device": {},
-            "cordova-plugin-splashscreen": {},
-            "cordova-plugin-statusbar": {},
-            "cordova-plugin-whitelist": {},
-            "ionic-plugin-keyboard": {},
-            "cordova-plugin-console": {},
-            "cordova-plugin-googlemaps": {
-                "API_KEY_FOR_ANDROID": "AIzaSyD3RIddnImiOjtE0ep8mV6FrXEEcc6Uaz8",
-                "API_KEY_FOR_IOS": "AIzaSyDNN18tWO2MVvC3dhx2H9WiuGyhdk5cbbY",
-                "LOCATION_WHEN_IN_USE_DESCRIPTION": "Show your location on the map",
-                "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Trace your location on the map"
-            },
-            "cordova-plugin-cocoapod-support": {},
-            "situm-cordova-plugin": {}
-        },
-        "platforms": [
-            "browser",
-            "ios"
-        ]
-    }
+    "platforms": [
+      "browser"
+    ]
+  }
 }
