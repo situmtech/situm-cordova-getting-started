@@ -11,6 +11,7 @@ import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatL
  */
 
 declare var cordova: any;
+declare var plugin: any;
 
 @Component({
   selector: 'page-positioning',
@@ -36,9 +37,10 @@ export class PositioningPage {
   floor: any;
 
   map: GoogleMap;
-  poiCategories: any[];
+  poiCategories: any[] = [];
   marker: Marker;
-  pois: any[];
+  pois: any[] = [];
+  groundOverlay: GroundOverlay = null;
 
   constructor(
     public platform: Platform,
@@ -134,14 +136,20 @@ export class PositioningPage {
     }
     this.positioning = false;
     if (this.marker) this.marker.remove();
-    cordova.plugins.Situm.stopPositioning(() => { });
+    cordova.plugins.Situm.stopPositioning((res) => {
+      console.log(res);
+    }, (err) => {
+      console.log(err);
+    });
   }
 
   private showPois() {
     cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(this.building, (res: any) => {
       this.pois = res;
+      console.log(res);
       if (this.poiCategories && this.map) {
         res.forEach(element => {
+          console.log(element);
           let category = this.poiCategories.find((poiCategory: any) => {
             return poiCategory.poiCategoryCode == element.category
           });
@@ -161,7 +169,7 @@ export class PositioningPage {
             icon: icon,
             position: markerPosition
           };
-          let html = "<html><b>Test html infowindow</b></html>";
+          let html = element.infoHtml;
           let infoWindow = new HtmlInfoWindow();
           infoWindow.setContent(html);
           this.map.addMarker(markerOptions).then((marker: Marker) => {
@@ -183,46 +191,57 @@ export class PositioningPage {
         loading.present();
         cordova.plugins.Situm.fetchFloorsFromBuilding(this.building, (res) => {
           this.floor = res[0];
-          cordova.plugins.Situm.fetchMapFromFloor(this.floor, (res) => {
-            let element: HTMLElement = document.getElementById('map');
-            let center: LatLng = new LatLng(this.building.center.latitude, this.building.center.longitude);
-            let options: GoogleMapOptions = {
-              camera: {
-                target: center,
-                zoom: 20
-              }
-            };
-            this.map = this.googleMaps.create(element, options);
-            this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-              // loading.dismiss();
-              let boundsSW: LatLng = new LatLng(this.building.bounds.southWest.latitude, this.building.bounds.southWest.longitude);
-              let boundsNE: LatLng = new LatLng(this.building.bounds.northEast.latitude, this.building.bounds.northEast.longitude);
-              let bounds = [
-                { lat: this.building.bounds.southWest.latitude, lng: this.building.bounds.southWest.longitude },
-                { lat: this.building.bounds.northEast.latitude, lng: this.building.bounds.northEast.longitude }
-              ];
-              let groundOptions: GroundOverlayOptions = {
-                bounds: bounds,
-                url: this.floor.mapUrl,
-                bearing: this.building.rotation * 180 / Math.PI
-              }
-              this.map.addGroundOverlay(groundOptions).then(() => {
-                loading.dismiss();
-              }).catch((err: any) => {
-                console.log(err);
-                loading.dismiss();
-              });
+          // let element: HTMLElement = document.getElementById('map');
+          let center: LatLng = new LatLng(this.building.center.latitude, this.building.center.longitude);
+          let options: GoogleMapOptions = {
+            camera: {
+              target: center,
+              zoom: 20
+            }
+          };
+          this.map = GoogleMaps.create('map', options);
+          // loading.dismiss();
+          let boundsSW: LatLng = new LatLng(this.building.bounds.southWest.latitude, this.building.bounds.southWest.longitude);
+          let boundsNE: LatLng = new LatLng(this.building.bounds.northEast.latitude, this.building.bounds.northEast.longitude);
+          let bounds = [
+            { lat: this.building.bounds.southWest.latitude, lng: this.building.bounds.southWest.longitude },
+            { lat: this.building.bounds.northEast.latitude, lng: this.building.bounds.northEast.longitude }
+          ];
+          let groundOptions: GroundOverlayOptions = {
+            bounds: bounds,
+            url: this.floor.mapUrl,
+            bearing: this.building.rotation * 180 / Math.PI
+          }
+          this.map.on(GoogleMapsEvent.MAP_READY).subscribe(() => {
+            return this.map.addGroundOverlay(groundOptions).then((data: any) => {
+              this.groundOverlay = data;
+              loading.dismiss();
             }).catch((err: any) => {
-              console.error(err);
+              console.log(err);
               loading.dismiss();
             });
+            // loading.dismiss();
           });
         });
       });
     }
   }
 
-  ionViewWillLeave() {
+  public clear() {
+    this.groundOverlay.remove();
+    this.map.remove();
+  }
+
+  ionViewDidLeave() {
+    this.building = undefined;
+    this.buildingName = undefined;
+    this.positioning = undefined;
+    this.position = undefined;
+    this.floor = undefined;
+    this.map = undefined;
+    this.poiCategories = undefined;
+    this.marker = undefined;
+    this.pois = undefined;
     this.stopPositioning();
   }
 

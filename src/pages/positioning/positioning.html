@@ -33,10 +33,15 @@
       <button ion-button small full color="light" (click)="showRoute()">Show default route.</button>
     </ion-col>
   </ion-row>
+  <ion-row>
+    <ion-col>
+      <button ion-button small full color="light" (click)="clear()">Clear map</button>
+    </ion-col>
+  </ion-row>
   <ion-item>
-    <ion-row class="map">
-      <ion-col class="map">
-        <div #map id="map"></div>
+    <ion-row class="mapa">
+      <ion-col class="mapa">
+        <div id="map"></div>
       </ion-col>
     </ion-row>
   </ion-item>
