@@ -31,6 +31,16 @@
   <ion-row>
     <ion-col>
       <button ion-button small full color="light" (click)="showRoute()">Show default route.</button>
+      <ion-item>
+        <ion-label>Accessible</ion-label>
+        <ion-checkbox [(ngModel)]="accessible" (ionChange)="updateAccessible()"></ion-checkbox>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <button ion-button item-start color="light" (click)="clearCache()">Clear cache</button>
+      <button ion-button item-end color="dark" (click)="stablishCache()">Stablish cache</button>
     </ion-col>
   </ion-row>
   <ion-item>

@@ -40,6 +40,8 @@ export class PositioningPage {
   marker: Marker;
   pois: any[];
 
+  accessible: boolean = false;
+
   constructor(
     public platform: Platform,
     public navCtrl: NavController,
@@ -107,7 +109,9 @@ export class PositioningPage {
 
   private showRoute() {
     if (this.map && this.pois) {
-      cordova.plugins.Situm.requestDirections([this.pois[0], this.pois[1]], (route: any) => {
+      var directionsOptionsMap = new Object();
+      directionsOptionsMap["accessible"] = this.accessible
+      cordova.plugins.Situm.requestDirections([this.building, this.pois[0], this.pois[2], directionsOptionsMap], (route: any) => {
         console.log(route);
         let polylineOptions: PolylineOptions = {
           color: "#754967",
@@ -137,6 +141,27 @@ export class PositioningPage {
     cordova.plugins.Situm.stopPositioning(() => { });
   }
 
+  private updateAccessible() {
+    console.log('Accessible new state:' + this.accessible);
+    this.accessible = !this.accessible;
+  }
+
+  private clearCache() {
+    console.log("invalidate cache js");
+    cordova.plugins.Situm.invalidateCache();
+  }
+
+  private stablishCache() {
+    console.log("set cache js");
+    // var cacheMaxAgeOptions = new Object();
+    // cacheMaxAgeOptions["maxAge"] = 10000
+
+    cordova.plugins.Situm.setCacheMaxAge(3600);
+
+    // cordova.plugins.Situm.getCacheMaxAge();
+    
+  }
+
   private showPois() {
     cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(this.building, (res: any) => {
       this.pois = res;
@@ -150,15 +175,16 @@ export class PositioningPage {
             lat: element.coordinate.latitude,
             lng: element.coordinate.longitude
           }
+          /*
           let icon: MarkerIcon = {
             url: element.category.icon_selected,
             size: {
               height: 35,
               width: 35
             }
-          }
+          }*/
           let markerOptions: MarkerOptions = {
-            icon: icon,
+            // icon: icon,
             position: markerPosition
           };
           let html = "<html><b>Test html infowindow</b></html>";
