@@ -6,8 +6,10 @@ NOTE: This app is only a use-case for testing purposes. It may not be up to date
 
 2) Link development plugin folder: 
 
-cd situm-cordova-android-getting-started
-cordova plugin add --link <path_to_plugin_folder>/situm-cordova-plugin/
+```
+  $ cd situm-cordova-android-getting-started
+  $ cordova plugin add --link <path_to_plugin_folder>/situm-cordova-plugin/
+```
 
 So, config.xml file should contain one line like this:
 
