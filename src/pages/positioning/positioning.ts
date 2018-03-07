@@ -40,6 +40,9 @@ export class PositioningPage {
   marker: Marker;
   pois: any[];
 
+  accessible: boolean = false;
+  navigating: boolean = false;
+
   constructor(
     public platform: Platform,
     public navCtrl: NavController,
@@ -87,13 +90,35 @@ export class PositioningPage {
         };
         this.map.addMarker(defaultOptions).then((marker: Marker) => {
           this.marker = marker;
-          cordova.plugins.Situm.startPositioning(buildings, (res: any) => {
+
+          var locationOptions = new Array();
+          locationOptions.push(this.building);
+
+          var locationOptionsMap = new Object();
+          locationOptionsMap["useDeadReckoning"] = false;
+          locationOptionsMap["buildingIdentifier"] = this.building.buildingIdentifier;
+          
+
+          locationOptions.push(locationOptionsMap);
+
+
+          cordova.plugins.Situm.startPositioning(locationOptions, (res: any) => {
             this.position = res;
             if (this.position.coordinate) {
               let position: ILatLng = {
                 lat: this.position.coordinate.latitude,
                 lng: this.position.coordinate.longitude
               };
+
+              if (this.navigating) {
+                console.log("Requesting navigation updates " + this.navigating);
+                cordova.plugins.Situm.updateNavigationWithLocation([res], function(error) {
+                  console.log(error);
+                } , function (error) {
+                  console.log(error);
+                });
+                console.log("Reached update with lcoation end");
+              }
               this.marker.setPosition(position);
               this.detector.detectChanges();
             }
@@ -105,9 +130,43 @@ export class PositioningPage {
     });
   }
 
+  private requestNavigation() {
+    // var navigationOptions = [];
+    cordova.plugins.Situm.requestNavigationUpdates();
+    this.navigating = true;
+  }
+
+  private removeNav() {
+    cordova.plugins.Situm.removeNavigationUpdates();
+    this.navigating = false;
+  }
+
+  private clearCache() {
+    console.log("invalidate cache js");
+    cordova.plugins.Situm.invalidateCache();
+  }
+
+  private stablishCache() {
+    console.log("set cache js");
+    // var cacheMaxAgeOptions = new Object();
+    // cacheMaxAgeOptions["maxAge"] = 10000
+
+    cordova.plugins.Situm.setCacheMaxAge(7000);
+
+    cordova.plugins.Situm.getCacheMaxAge();
+    
+  }
+
   private showRoute() {
+    console.log("determining route between first and second poi");
     if (this.map && this.pois) {
-      cordova.plugins.Situm.requestDirections([this.pois[0], this.pois[1]], (route: any) => {
+      var directionsOptionsMap = new Object();
+      directionsOptionsMap["accessible"] = this.accessible
+      // if (this.position != null) {
+      console.log("Position is: " + this.position.bearing.degrees);
+      directionsOptionsMap["startingAngle"] = this.position.bearing.degrees; // Compute this 
+      // }
+      cordova.plugins.Situm.requestDirections([this.building, this.position.position, this.pois[2], directionsOptionsMap], (route: any) => {
         console.log(route);
         let polylineOptions: PolylineOptions = {
           color: "#754967",
@@ -137,6 +196,8 @@ export class PositioningPage {
     cordova.plugins.Situm.stopPositioning(() => { });
   }
 
+  
+
   private showPois() {
     cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(this.building, (res: any) => {
       this.pois = res;
@@ -161,7 +222,7 @@ export class PositioningPage {
             icon: icon,
             position: markerPosition
           };
-          let html = "<html><b>Test html infowindow</b></html>";
+          let html = '<html><p>[innerHTML]="element.poiName"</p></html>';
           let infoWindow = new HtmlInfoWindow();
           infoWindow.setContent(html);
           this.map.addMarker(markerOptions).then((marker: Marker) => {
@@ -172,6 +233,11 @@ export class PositioningPage {
         });
       }
     });
+  }
+
+  private updateAccessible() {
+    console.log('Accessible new state:' + this.accessible);
+    this.accessible = !this.accessible;
   }
 
   private showMap() {
