@@ -1,8 +1,8 @@
 {
   "name": "situm-cordova-getting-started",
-  "version": "0.0.1",
-  "author": "Cocodin Technolgy SL",
-  "homepage": "http://www.cocodin.com",
+  "version": "0.0.3",
+  "author": "Situm Technologies",
+  "homepage": "http://www.situm.es",
   "description": "Getting started android hybrid app for testing Cordova-based situm plugin.",
   "private": true,
   "scripts": {
@@ -55,7 +55,7 @@
     "moment": "^2.22.0",
     "ng2-translate": "^5.0.0",
     "rxjs": "5.5.2",
-    "situm-cordova-plugin-official": "^1.4.0",
+    "situm-cordova-plugin-official": "^1.4.1",
     "sw-toolbox": "3.6.0",
     "tar-stream": "^1.5.5",
     "zone.js": "0.8.18"
