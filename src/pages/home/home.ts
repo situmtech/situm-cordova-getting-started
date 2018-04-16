@@ -15,7 +15,11 @@ export class HomePage {
 
   public buildings: any[] = [];
 
-  constructor(public platform: Platform, public navCtrl: NavController, public detector: ChangeDetectorRef) { };
+  constructor(
+    public platform: Platform,
+    public navCtrl: NavController,
+    public detector: ChangeDetectorRef
+  ) {};
 
   ionViewDidEnter() {
     this.platform.ready().then(() => {
@@ -31,8 +35,8 @@ export class HomePage {
     });
   };
 
-  goToPositioning(item) {
-    this.navCtrl.push(PositioningPage, { building: item });
+  showBuilding(building) {
+    this.navCtrl.push(PositioningPage, { building: building });
   }
 
 }
