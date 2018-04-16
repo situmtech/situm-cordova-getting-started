@@ -1,4 +1,4 @@
-#Situm Cordova Getting Started
+# Situm Cordova Getting Started
 
 NOTE: This app is only a use-case for testing purposes. It may not be up to date or optimized.
 
@@ -13,6 +13,12 @@ So, config.xml file should contain one line like this:
 
     <plugin name="situm-cordova-plugin" spec="file:../situm-cordova-plugin" />
 
+Before launching the application it is necessary to create the `src/services/situm.ts` file and insert the following code:
+
+```
+export const USER_EMAIL = 'USER_EMAIL';
+export const USER_API_KEY = 'USER_API_KEY';
+```
 
 >Run Android version:
 

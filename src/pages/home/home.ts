@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
 import { PositioningPage } from '../positioning/positioning';
+import { USER_EMAIL, USER_API_KEY } from '../../services/situm';
 
 declare var cordova: any;
 
@@ -18,7 +19,7 @@ export class HomePage {
 
   ionViewDidEnter() {
     this.platform.ready().then(() => {
-      cordova.plugins.Situm.setApiKey("USER_EMAIL", "USER_API_KEY");
+      cordova.plugins.Situm.setApiKey(USER_EMAIL, USER_API_KEY);
       this.fetchBuildings();
     });
   };
