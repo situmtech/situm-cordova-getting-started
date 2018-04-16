@@ -86,6 +86,7 @@ export class PositioningPage {
       this.positioning = true;
       if (this.map) {
         let defaultOptions: MarkerOptions = {
+          position: { lat: 0, lng: 0 },
           title: 'Current position'
         };
         this.map.addMarker(defaultOptions).then((marker: Marker) => {
@@ -258,7 +259,7 @@ export class PositioningPage {
                 zoom: 20
               }
             };
-            this.map = this.googleMaps.create(element, options);
+            this.map = GoogleMaps.create(element, options);
             this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
               // loading.dismiss();
               let boundsSW: LatLng = new LatLng(this.building.bounds.southWest.latitude, this.building.bounds.southWest.longitude);
