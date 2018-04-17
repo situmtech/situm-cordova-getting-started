@@ -3,16 +3,14 @@
 </ion-header>
 
 <ion-content padding>
+
+  <map-button building="{{building | json}}"
+              (showBuildingMap)="showMap($event)"></map-button>
+
   <ion-list-header>
     <button ion-button item-start color="light" (click)="startPositioning()">Start positioning.</button>
     <button ion-button item-end color="dark" (click)="stopPositioning()">Stop Positioning.</button>
   </ion-list-header>
-
-  <ion-row>
-    <ion-col>
-      <button ion-button small full color="light" (click)="showMap()">Show map</button>
-    </ion-col>
-  </ion-row>
 
   <ion-row>
     <ion-col>

@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/co
 import { NavController, NavParams, Platform, Events, LoadingController } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions, HtmlInfoWindow } from '@ionic-native/google-maps';
+import { MapButtonComponent } from '../../components/mapButton/mapButton';
 
 /**
  * Generated class for the PositioningPage page.
@@ -16,6 +17,7 @@ declare var cordova: any;
   selector: 'page-positioning',
   templateUrl: 'positioning.html',
 })
+
 export class PositioningPage {
 
   building: any;
@@ -241,16 +243,21 @@ export class PositioningPage {
     this.accessible = !this.accessible;
   }
 
-  private showMap() {
+  private showMap(event) {
     if (!this.map) {
       this.platform.ready().then(() => {
         let loading = this.loadingCtrl.create({
           content: "Cargando mapa..."
         });
         loading.present();
+
         cordova.plugins.Situm.fetchFloorsFromBuilding(this.building, (res) => {
           this.floor = res[0];
           cordova.plugins.Situm.fetchMapFromFloor(this.floor, (res) => {
+            console.log('Getting the floor map');
+            console.log(res);
+            console.log(this.floor.mapUrl);
+            let floorMap : any = res.data;
             let element: HTMLElement = document.getElementById('map');
             let center: LatLng = new LatLng(this.building.center.latitude, this.building.center.longitude);
             let options: GoogleMapOptions = {
@@ -268,6 +275,7 @@ export class PositioningPage {
                 { lat: this.building.bounds.southWest.latitude, lng: this.building.bounds.southWest.longitude },
                 { lat: this.building.bounds.northEast.latitude, lng: this.building.bounds.northEast.longitude }
               ];
+              console.log('Createndo ground overlay');
               let groundOptions: GroundOverlayOptions = {
                 bounds: bounds,
                 url: this.floor.mapUrl,
@@ -276,6 +284,7 @@ export class PositioningPage {
               this.map.addGroundOverlay(groundOptions).then(() => {
                 loading.dismiss();
               }).catch((err: any) => {
+                console.log('Intentando crear o ground overlay');
                 console.log(err);
                 loading.dismiss();
               });
