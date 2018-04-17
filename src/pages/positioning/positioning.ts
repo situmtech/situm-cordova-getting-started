@@ -22,8 +22,6 @@ export class PositioningPage {
 
   building: any;
 
-  buildingName: string = '';
-
   positioning: boolean = false;
 
   position: any = {
@@ -35,7 +33,8 @@ export class PositioningPage {
     bearing: ''
   }
 
-  floor: any;
+  floors: any[];
+  currentFloor: any;
 
   map: GoogleMap;
   poiCategories: any[];
@@ -246,56 +245,73 @@ export class PositioningPage {
   private showMap(event) {
     if (!this.map) {
       this.platform.ready().then(() => {
-        let loading = this.loadingCtrl.create({
-          content: "Cargando mapa..."
-        });
+        let loading = this.createLoading('Creando mapa...');
         loading.present();
 
         cordova.plugins.Situm.fetchFloorsFromBuilding(this.building, (res) => {
-          this.floor = res[0];
-          cordova.plugins.Situm.fetchMapFromFloor(this.floor, (res) => {
-            console.log('Getting the floor map');
-            console.log(res);
-            console.log(this.floor.mapUrl);
-            let floorMap : any = res.data;
-            let element: HTMLElement = document.getElementById('map');
-            let center: LatLng = new LatLng(this.building.center.latitude, this.building.center.longitude);
-            let options: GoogleMapOptions = {
-              camera: {
-                target: center,
-                zoom: 20
-              }
-            };
-            this.map = GoogleMaps.create(element, options);
-            this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-              // loading.dismiss();
-              let boundsSW: LatLng = new LatLng(this.building.bounds.southWest.latitude, this.building.bounds.southWest.longitude);
-              let boundsNE: LatLng = new LatLng(this.building.bounds.northEast.latitude, this.building.bounds.northEast.longitude);
-              let bounds = [
-                { lat: this.building.bounds.southWest.latitude, lng: this.building.bounds.southWest.longitude },
-                { lat: this.building.bounds.northEast.latitude, lng: this.building.bounds.northEast.longitude }
-              ];
-              console.log('Createndo ground overlay');
-              let groundOptions: GroundOverlayOptions = {
-                bounds: bounds,
-                url: this.floor.mapUrl,
-                bearing: this.building.rotation * 180 / Math.PI
-              }
-              this.map.addGroundOverlay(groundOptions).then(() => {
-                loading.dismiss();
-              }).catch((err: any) => {
-                console.log('Intentando crear o ground overlay');
-                console.log(err);
-                loading.dismiss();
-              });
-            }).catch((err: any) => {
-              console.error(err);
-              loading.dismiss();
-            });
-          });
+          this.floors = res;
+          this.currentFloor = res[0];
         });
+
+        this.mountMap();
+
+        this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+          this.mountOverlay(loading);
+        }).catch((err: any) =>  this.handleError(err, loading));
       });
     }
+  }
+
+  private mountMap() {
+    let element = this.getElementById('map');
+    let options: GoogleMapOptions = {
+      camera: {
+        target: this.getCenter(this.building),
+        zoom: 20
+      }
+    };
+    this.map = GoogleMaps.create(element, options);
+  }
+
+  private mountOverlay(loading) {
+    let bounds = this.getBounds(this.building);
+    let groundOptions: GroundOverlayOptions = {
+      bounds: bounds,
+      url: this.currentFloor.mapUrl,
+      bearing: this.building.rotation * 180 / Math.PI
+    }
+    this.map.addGroundOverlay(groundOptions).then(() => {
+      loading.dismiss();
+    }).catch((err: any) => this.handleError(err, loading));
+  }
+
+  private handleError(error, loading) {
+    console.log(error);
+    if (loading) loading.dismiss();
+  }
+
+  private getElementById(id) : HTMLElement {
+    return document.getElementById(id);
+  }
+
+  private createLoading(msg) {
+    return this.loadingCtrl.create({
+      content: msg
+    });
+  }
+
+  private getBounds(building) {
+    if (!building) return;
+    let boundsSW: LatLng = new LatLng(building.bounds.southWest.latitude, building.bounds.southWest.longitude);
+    let boundsNE: LatLng = new LatLng(building.bounds.northEast.latitude, building.bounds.northEast.longitude);
+    return [
+      { lat: building.bounds.southWest.latitude, lng: building.bounds.southWest.longitude },
+      { lat: building.bounds.northEast.latitude, lng: building.bounds.northEast.longitude }
+    ];
+  }
+
+  private getCenter(building) : LatLng {
+    return new LatLng(building.center.latitude, building.center.longitude);
   }
 
   ionViewWillLeave() {
