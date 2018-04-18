@@ -10,7 +10,13 @@ NOTE: This app is only a use-case for testing purposes. It may not be up to date
 
 1) Ionic installation : https://ionicframework.com/docs/intro/installation/
 
-2) Link development plugin folder: 
+2) Initialize project:
+
+```
+npm install
+```
+
+3) Link development plugin folder: 
 
 ```
   $ cd situm-cordova-getting-started
