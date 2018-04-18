@@ -1,17 +1,32 @@
 import { Component, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
-import { NavController, NavParams, Platform, Events, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, Platform, Events, LoadingController, ToastController } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions, HtmlInfoWindow } from '@ionic-native/google-maps';
 import { MapButtonComponent } from '../../components/mapButton/mapButton';
 
-/**
- * Generated class for the PositioningPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
-
 declare var cordova: any;
+
+const ROUTE_COLOR = '#754967';
+
+// Positioning parameters
+const defaultOptionsMap = {
+  useDeadReckoning: false,
+  interval: 1000,
+  indoorProvider: 'INPHONE',
+  useBle: true,
+  useWifi: true, 
+  motionMode: 'BY_FOOT',
+  useForegroundService: true,
+  outdoorLocationOptions: {
+    continuousMode: true,
+    userDefinedThreshold: false,
+    burstInterval: 1,
+    averageSnrThreshold: 25.0
+  },
+  beaconFilters: [],
+  smallestDisplacement: 1.0,
+  realtimeUpdateInterval: 1000
+};
 
 @Component({
   selector: 'page-positioning',
@@ -52,212 +67,32 @@ export class PositioningPage {
     public detector: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
     public loadingCtrl: LoadingController,
-    public googleMaps: GoogleMaps
+    public googleMaps: GoogleMaps,
+    public toastCtrl: ToastController
   ) {
     this.building = this.navParams.get('building');
-  }
-
-  ionViewDidEnter() {
-    this.platform.ready().then(() => {
-      // cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(this.building, (res: any) => {
-      //   console.log(res);
-      //   cordova.plugins.Situm.requestDirections([res[0], res[1]], (res) => {
-      //     console.log(res);
-      //   });
-      // });
-      // cordova.plugins.Situm.fetchOutdoorPOIsFromBuilding(this.building, (res: any) => {
-      //   console.log(res);
-      // });
-      // cordova.plugins.Situm.fetchEventsFromBuilding(this.building, (res: any) => {
-      //   console.log(res);
-      // });
-      cordova.plugins.Situm.fetchPoiCategories((res: any) => {
-        this.poiCategories = res;
-      });
-    });
-  }
-
-  private startPositioning() {
-    if (this.positioning == true) {
-      console.log("Position listener is already enabled.");
-      return;
-    }
-    this.platform.ready().then(() => {
-      let buildings = [this.building];
-      this.positioning = true;
-      if (this.map) {
-        let defaultOptions: MarkerOptions = {
-          position: { lat: 0, lng: 0 },
-          title: 'Current position'
-        };
-        this.map.addMarker(defaultOptions).then((marker: Marker) => {
-          this.marker = marker;
-
-          var locationOptions = new Array();
-          locationOptions.push(this.building);
-
-          var locationOptionsMap = new Object();
-          locationOptionsMap["useDeadReckoning"] = false;
-          locationOptionsMap["buildingIdentifier"] = this.building.buildingIdentifier;
-          
-
-          locationOptions.push(locationOptionsMap);
-
-
-          cordova.plugins.Situm.startPositioning(locationOptions, (res: any) => {
-            this.position = res;
-            if (this.position.coordinate) {
-              let position: ILatLng = {
-                lat: this.position.coordinate.latitude,
-                lng: this.position.coordinate.longitude
-              };
-
-              if (this.navigating) {
-                console.log("Requesting navigation updates " + this.navigating);
-                cordova.plugins.Situm.updateNavigationWithLocation([res], function(error) {
-                  console.log(error);
-                } , function (error) {
-                  console.log(error);
-                });
-                console.log("Reached update with lcoation end");
-              }
-              this.marker.setPosition(position);
-              this.detector.detectChanges();
-            }
-          }, (err: any) => {
-            console.log(err);
-          });
-        });
-      }
-    });
-  }
-
-  private requestNavigation() {
-    // var navigationOptions = [];
-    cordova.plugins.Situm.requestNavigationUpdates();
-    this.navigating = true;
-  }
-
-  private removeNav() {
-    cordova.plugins.Situm.removeNavigationUpdates();
-    this.navigating = false;
-  }
-
-  private clearCache() {
-    console.log("invalidate cache js");
-    cordova.plugins.Situm.invalidateCache();
-  }
-
-  private stablishCache() {
-    console.log("set cache js");
-    // var cacheMaxAgeOptions = new Object();
-    // cacheMaxAgeOptions["maxAge"] = 10000
-
-    cordova.plugins.Situm.setCacheMaxAge(7000);
-
-    cordova.plugins.Situm.getCacheMaxAge();
-    
-  }
-
-  private showRoute() {
-    console.log("determining route between first and second poi");
-    if (this.map && this.pois) {
-      var directionsOptionsMap = new Object();
-      directionsOptionsMap["accessible"] = this.accessible
-      // if (this.position != null) {
-      console.log("Position is: " + this.position.bearing.degrees);
-      directionsOptionsMap["startingAngle"] = this.position.bearing.degrees; // Compute this 
-      // }
-      cordova.plugins.Situm.requestDirections([this.building, this.position.position, this.pois[2], directionsOptionsMap], (route: any) => {
-        console.log(route);
-        let polylineOptions: PolylineOptions = {
-          color: "#754967",
-          width: 4,
-          points: []
-        };
-        route.points.forEach(point => {
-          polylineOptions.points.push({
-            lat: point.coordinate.latitude,
-            lng: point.coordinate.longitude
-          });
-        });
-        this.map.addPolyline(polylineOptions);
-      }, (err: any) => {
-        console.error(err);
-      });
-    }
-  }
-
-  private stopPositioning() {
-    if (this.positioning == false) {
-      console.log("Position listener is not enabled.");
-      return;
-    }
-    this.positioning = false;
-    if (this.marker) this.marker.remove();
-    cordova.plugins.Situm.stopPositioning(() => { });
-  }
-
-  
-
-  private showPois() {
-    cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(this.building, (res: any) => {
-      this.pois = res;
-      if (this.poiCategories && this.map) {
-        res.forEach(element => {
-          let category = this.poiCategories.find((poiCategory: any) => {
-            return poiCategory.poiCategoryCode == element.category
-          });
-          element.category = category;
-          let markerPosition: ILatLng = {
-            lat: element.coordinate.latitude,
-            lng: element.coordinate.longitude
-          }
-          let icon: MarkerIcon = {
-            url: element.category.icon_selected,
-            size: {
-              height: 35,
-              width: 35
-            }
-          }
-          let markerOptions: MarkerOptions = {
-            icon: icon,
-            position: markerPosition
-          };
-          let html = '<html><p>[innerHTML]="element.poiName"</p></html>';
-          let infoWindow = new HtmlInfoWindow();
-          infoWindow.setContent(html);
-          this.map.addMarker(markerOptions).then((marker: Marker) => {
-            marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
-              infoWindow.open(marker);
-            });
-          });
-        });
-      }
-    });
-  }
-
-  private updateAccessible() {
-    console.log('Accessible new state:' + this.accessible);
-    this.accessible = !this.accessible;
   }
 
   private showMap(event) {
     if (!this.map) {
       this.platform.ready().then(() => {
-        let loading = this.createLoading('Creando mapa...');
+        // Shows a loading while the map is not displayed
+        let loading = this.createLoading('Loading map...');
         loading.present();
-
+        // Fetchs all floors of a building
+        // More details in
+        // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.fetchFloorsFromBuilding
         cordova.plugins.Situm.fetchFloorsFromBuilding(this.building, (res) => {
           this.floors = res;
           this.currentFloor = res[0];
+
+          this.mountMap();
+
+          this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+            this.mountOverlay(loading);
+          }).catch((err: any) =>  this.handleError(err, loading));
+
         });
-
-        this.mountMap();
-
-        this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-          this.mountOverlay(loading);
-        }).catch((err: any) =>  this.handleError(err, loading));
       });
     }
   }
@@ -276,8 +111,8 @@ export class PositioningPage {
   private mountOverlay(loading) {
     let bounds = this.getBounds(this.building);
     let groundOptions: GroundOverlayOptions = {
-      bounds: bounds,
       url: this.currentFloor.mapUrl,
+      bounds: bounds,
       bearing: this.building.rotation * 180 / Math.PI
     }
     this.map.addGroundOverlay(groundOptions).then(() => {
@@ -285,8 +120,236 @@ export class PositioningPage {
     }).catch((err: any) => this.handleError(err, loading));
   }
 
+  private showPois() {
+    if (!this.map) {
+      const message = 'The map must be visible in order to show the POIs';
+      this.presentToast(message, 'bottom', null);
+      return;
+    }
+    this.fetchForPOIs(this.building);
+  }
+
+  private fetchForPOIs(building) {
+    // Fetching for a building's  indoor POIs
+    // More details in 
+    // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.fetchIndoorPOIsFromBuilding
+    cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(building, (res: any) => {
+      this.pois = res;
+      if (this.pois.length == 0) {
+        const message = 'This building has no POIs';
+        this.presentToast(message, 'bottom', null);
+        return;
+      }
+      this.fetchForPOICategories(building);
+    });
+  }
+
+  private fetchForPOICategories(building) {
+    // Fetching for an user's POI categories
+    // More details in 
+    //http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.fetchPoiCategories
+    cordova.plugins.Situm.fetchPoiCategories((res: any) => {
+      this.poiCategories = res;
+      this.drawPOIsOnMap();
+    });
+  }
+
+  private drawPOIsOnMap() {
+    this.pois.forEach(poi => {
+      poi.category = this.findPOICategory(poi);
+      let markerPosition: ILatLng = {
+        lat: poi.coordinate.latitude,
+        lng: poi.coordinate.longitude
+      }
+      let icon: MarkerIcon = {
+        url: poi.category.icon_selected,
+        size: {
+          height: 35,
+          width: 35
+        }
+      }
+      let markerOptions: MarkerOptions = {
+        icon: icon,
+        position: markerPosition,
+        title: `${poi.poiName}`,
+      };
+      this.createMarker(markerOptions, this.map, false);
+    });
+  }
+
+  private findPOICategory(poi) {
+    return this.poiCategories.find((poiCategory: any) => {
+      return poiCategory.poiCategoryCode == poi.category
+    });
+  }
+
+  private startPositioning() {
+    if (this.positioning == true) {
+      const message = 'Position listener is already enabled.';
+      this.presentToast(message, 'bottom', null);
+      return;
+    }
+    this.platform.ready().then(() => {
+      if (!this.map) {
+        const message = 'The map must be visible in order to launch the positioning';
+        this.presentToast(message, 'bottom', null);
+        return;
+      }
+      this.createPositionMarker();
+      const locationOptions = this.mountLocationOptions();
+
+      // Set callback and starts listen onLocationChanged event
+      // More details in 
+      // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.startPositioning
+      cordova.plugins.Situm.startPositioning(locationOptions, (res: any) => {
+        this.positioning = true;
+        this.position = res;
+
+        if (!this.position || !this.position.coordinate) return;
+        let position = this.mountPositionCoords(this.position);
+  
+        // Update the navigation
+        if (this.navigating) this.updateNavigation(this.position);
+        this.marker.setPosition(position);
+        this.detector.detectChanges();
+
+      }, (err: any) => {
+        console.log('Error when starting positioning', err);
+      });
+    });
+  }
+
+  private mountLocationOptions() {
+    let locationOptions = new Array();
+    locationOptions.push(this.building);
+    defaultOptionsMap['buildingIdentifier'] = this.building.buildingIdentifier,
+    locationOptions.push(defaultOptionsMap);
+    return locationOptions;
+  }
+
+  private mountPositionCoords(position) : ILatLng {
+    return {
+      lat: position.coordinate.latitude,
+      lng: position.coordinate.longitude
+    };
+  }
+
+  private updateNavigation(position) {
+    // Sends a position to the location manager for calculate the navigation progress
+    cordova.plugins.Situm.updateNavigationWithLocation([position], function(error) {
+      console.log(error);
+    }, function (error) {
+      console.log(error);
+    });
+  }
+
+  private stopPositioning() {
+    if (this.positioning == false) {
+      console.log("Position listener is not enabled.");
+      return;
+    }
+    this.positioning = false;
+    if (this.marker) this.marker.remove();
+    cordova.plugins.Situm.stopPositioning(() => { });
+  }
+
+  private showRoute() {
+    if (!this.map || (!this.pois || this.pois.length == 0) || !this.positioning) {
+      const message = 'The map with the POIs must be visible and the positioning must be started in order to determine the route';
+      this.presentToast(message, 'bottom', null);
+      return;
+    }
+    console.log("Position is: " + this.position.bearing.degrees);
+    
+    let directionsOptionsMap = {
+      accesible: this.accessible, 
+      startingAngle: this.position.bearing.degrees,
+    };
+    // Calculates a route between two points
+    // In this case, determining route between the current position and the second POI
+    // More details in
+    // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.requestDirections
+    cordova.plugins.Situm.requestDirections([this.building, this.position.position, this.pois[2], directionsOptionsMap], (route: any) => {
+      this.drawRouteOnMap(route);
+    }, (err: any) => {
+      console.error(err);
+    });
+  }
+
+  private drawRouteOnMap(route) {
+    let polylineOptions: PolylineOptions = {
+      color: ROUTE_COLOR,
+      width: 4,
+      points: []
+    };
+    route.points.forEach(point => {
+      polylineOptions.points.push({
+        lat: point.coordinate.latitude,
+        lng: point.coordinate.longitude
+      });
+    });
+    this.map.addPolyline(polylineOptions);
+  }
+
+  private updateAccessible() {
+    console.log('Accessible new state:' + this.accessible);
+    this.accessible = !this.accessible;
+  }
+
+  private createPositionMarker() {
+    let defaultOptions: MarkerOptions = {
+      position: { lat: 0, lng: 0 },
+      title: 'Current position'
+    };
+    this.createMarker(defaultOptions, this.map, true);
+  }
+
+  private requestNavigation() {
+    if (this.navigating) {
+      const message = 'Navigation is already activated';
+      this.presentToast(message, 'bottom', null);
+      return;
+    }
+    // Adds a listener to receive navigation updates when the 
+    // updateNavigationWithLocation method is called
+    cordova.plugins.Situm.requestNavigationUpdates();
+    this.navigating = true;
+  }
+
+  private removeNavigation() {
+    if (!this.navigating) {
+      const message = 'Navigation is already deactivated';
+      this.presentToast(message, 'bottom', null);
+      return;
+    }
+    // Removes the listener from navigation updates
+    cordova.plugins.Situm.removeNavigationUpdates();
+    this.navigating = false;
+  }
+
+  private clearCache() {
+    // Invalidate all the resources in the cache
+    // More details in
+    // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.invalidateCache
+    cordova.plugins.Situm.invalidateCache();
+  }
+
+  private stablishCache() {
+    // Sets the maximum age of a cached response.
+    // More details in 
+    // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.setCacheMaxAge
+    cordova.plugins.Situm.setCacheMaxAge(7000);
+    // Gets the maxium age of a cached response.
+    cordova.plugins.Situm.getCacheMaxAge();
+  }
+
+  private createMarker(options : MarkerOptions, map, currentPosition) {
+    map.addMarker(options).then((marker : Marker) => {
+      if (currentPosition) this.marker = marker;
+    });
+  }
+
   private handleError(error, loading) {
-    console.log(error);
     if (loading) loading.dismiss();
   }
 
@@ -316,6 +379,16 @@ export class PositioningPage {
 
   ionViewWillLeave() {
     this.stopPositioning();
+  }
+
+  presentToast(text, position, toastClass) {
+    const toast = this.toastCtrl.create({
+      message: text,
+      duration: 2000,
+      position: position,
+      cssClass: toastClass ? toastClass : ''
+    });
+    toast.present();
   }
 
 }

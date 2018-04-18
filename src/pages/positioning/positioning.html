@@ -6,15 +6,19 @@
 
   <map-button building="{{building | json}}"
               (showBuildingMap)="showMap($event)"></map-button>
-
-  <ion-list-header>
-    <button ion-button item-start color="light" (click)="startPositioning()">Start positioning.</button>
-    <button ion-button item-end color="dark" (click)="stopPositioning()">Stop Positioning.</button>
-  </ion-list-header>
-
+              
   <ion-row>
     <ion-col>
       <button ion-button small full color="light" (click)="showPois()">Show POIs</button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col col-6>
+      <button ion-button item-start full small color="light" (click)="startPositioning()">Start positioning</button>
+    </ion-col>
+    <ion-col col-6>
+      <button ion-button item-end full small color="dark" (click)="stopPositioning()">Stop Positioning</button>
     </ion-col>
   </ion-row>
 
@@ -29,16 +33,20 @@
   </ion-row>
 
   <ion-row>
-    <ion-col>
-      <button ion-button item-start color="light" (click)="clearCache()">Clear cache</button>
-      <button ion-button item-end color="dark" (click)="stablishCache()">Stablish cache</button>
+    <ion-col col-6>
+      <button ion-button item-start full small color="light" (click)="requestNavigation()">Nav Updates</button>
+    </ion-col>
+    <ion-col col-6>
+      <button ion-button item-end full small color="dark" (click)="removeNavigation()">Remove Nav</button>
     </ion-col>
   </ion-row>
 
   <ion-row>
-    <ion-col>
-      <button ion-button item-start color="light" (click)="requestNavigation()">Nav Updates</button>
-      <button ion-button item-end color="dark" (click)="removeNav()">Remove Nav</button>
+    <ion-col col-6>
+      <button ion-button item-start full small color="light" (click)="clearCache()">Clear cache</button>
+    </ion-col>
+    <ion-col col-6>
+      <button ion-button item-end full small color="dark" (click)="stablishCache()">Stablish cache</button>
     </ion-col>
   </ion-row>
 
