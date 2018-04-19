@@ -29,9 +29,14 @@ export class HomePage {
   };
 
   public fetchBuildings() {
+    // Fetchs the buildings for the current user
+    // More details in
+    // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.fetchBuildings
     cordova.plugins.Situm.fetchBuildings((res) => {
       this.buildings = res;
       this.detector.detectChanges();
+    }, (error) => {
+      console.log('An error occurred when recovering the buildings');
     });
   };
 

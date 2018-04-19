@@ -9,44 +9,89 @@
               
   <ion-row>
     <ion-col>
-      <button ion-button small full color="light" (click)="showPois()">Show POIs</button>
+      <button ion-button 
+              small full 
+              color="light" 
+              (click)="showPois()"
+              [disabled]="mapHidden()">Show POIs</button>
     </ion-col>
   </ion-row>
 
   <ion-row>
     <ion-col col-6>
-      <button ion-button item-start full small color="light" (click)="startPositioning()">Start positioning</button>
+      <button ion-button 
+              item-start 
+              full 
+              small 
+              color="light" 
+              (click)="startPositioning()"
+              [disabled]="mapHidden()">Start positioning</button>
     </ion-col>
     <ion-col col-6>
-      <button ion-button item-end full small color="dark" (click)="stopPositioning()">Stop Positioning</button>
+      <button ion-button 
+              item-end 
+              full 
+              small 
+              color="dark" 
+              (click)="stopPositioning()"
+              [disabled]="positioningStopped()">Stop Positioning</button>
     </ion-col>
   </ion-row>
 
   <ion-row>
     <ion-col>
-      <button ion-button small full color="light" (click)="showRoute()">Show default route</button>
+      <button ion-button
+              small
+              full 
+              color="light" 
+              (click)="showRoute()"
+              [disabled]="routeConditionsNotSet()">Show default route</button>
       <ion-item>
         <ion-label>Accessible</ion-label>
-        <ion-checkbox [(ngModel)]="accessible" (ionChange)="updateAccessible()"></ion-checkbox>
+        <ion-checkbox [(ngModel)]="accessible" 
+                      (ionChange)="updateAccessible()"
+                      [disabled]="routeConditionsNotSet()"></ion-checkbox>
       </ion-item>
     </ion-col>
   </ion-row>
 
   <ion-row>
     <ion-col col-6>
-      <button ion-button item-start full small color="light" (click)="requestNavigation()">Nav Updates</button>
+      <button ion-button 
+              item-start
+              full 
+              small 
+              color="light" 
+              (click)="requestNavigation()"
+              [disabled]="navigationConditionsNotSet()">Nav Updates</button>
     </ion-col>
     <ion-col col-6>
-      <button ion-button item-end full small color="dark" (click)="removeNavigation()">Remove Nav</button>
+      <button ion-button
+              item-end
+              full 
+              small 
+              color="dark" 
+              (click)="removeNavigation()"
+              [disabled]="navigationConditionsNotSet()">Remove Nav</button>
     </ion-col>
   </ion-row>
 
   <ion-row>
     <ion-col col-6>
-      <button ion-button item-start full small color="light" (click)="clearCache()">Clear cache</button>
+      <button ion-button
+              item-start 
+              full 
+              small 
+              color="light" 
+              (click)="clearCache()">Clear cache</button>
     </ion-col>
     <ion-col col-6>
-      <button ion-button item-end full small color="dark" (click)="stablishCache()">Stablish cache</button>
+      <button ion-button 
+              item-end 
+              full 
+              small 
+              color="dark" 
+              (click)="stablishCache()">Stablish cache</button>
     </ion-col>
   </ion-row>
 

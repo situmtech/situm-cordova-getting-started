@@ -58,6 +58,7 @@ export class PositioningPage {
 
   accessible: boolean = false;
   navigating: boolean = false;
+  route: any;
 
   constructor(
     public platform: Platform,
@@ -248,9 +249,10 @@ export class PositioningPage {
       console.log("Position listener is not enabled.");
       return;
     }
-    this.positioning = false;
-    if (this.marker) this.marker.remove();
-    cordova.plugins.Situm.stopPositioning(() => { });
+    cordova.plugins.Situm.stopPositioning(() => {
+      if (this.marker) this.marker.remove();
+      this.positioning = false;
+     });
   }
 
   private showRoute() {
@@ -270,6 +272,7 @@ export class PositioningPage {
     // More details in
     // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.requestDirections
     cordova.plugins.Situm.requestDirections([this.building, this.position.position, this.pois[2], directionsOptionsMap], (route: any) => {
+      this.route = route;
       this.drawRouteOnMap(route);
     }, (err: any) => {
       console.error(err);
@@ -389,6 +392,31 @@ export class PositioningPage {
       cssClass: toastClass ? toastClass : ''
     });
     toast.present();
+  }
+
+  mapHidden() {
+    if (!this.map) return true;
+    return false;
+  }
+
+  positioningStopped() {
+    if (!this.positioning) return true;
+    return false;
+  }
+
+  noPois() {
+    if (!this.pois || this.pois.length == 0) return true;
+    return false;
+  }
+
+  routeConditionsNotSet() {
+    if (this.noPois() || this.mapHidden() || this.positioningStopped()) return true;
+    return false;
+  }
+
+  navigationConditionsNotSet() {
+    if (this.routeConditionsNotSet() || !this.route) return true;
+    return false;
   }
 
 }

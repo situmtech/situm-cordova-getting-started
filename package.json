@@ -55,7 +55,7 @@
     "moment": "^2.15.1",
     "ng2-translate": "^5.0.0",
     "rxjs": "5.5.2",
-    "situm-cordova-plugin-official-development": "file:../situm-cordova-plugin",
+    "situm-cordova-plugin-official": "file:../situm-cordova-plugin",
     "sw-toolbox": "3.6.0",
     "tar-stream": "^1.5.4",
     "zone.js": "0.8.18"
@@ -83,7 +83,7 @@
         "ANDROID_SUPPORT_V4_VERSION": "24.1.0"
       },
       "cordova-plugin-cocoapod-support": {},
-      "situm-cordova-plugin-official-development": {}
+      "situm-cordova-plugin-official": {}
     },
     "platforms": [
       "android"
