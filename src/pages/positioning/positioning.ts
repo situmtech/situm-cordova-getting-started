@@ -215,10 +215,10 @@ export class PositioningPage {
         this.detector.detectChanges();
 
       }, (err: any) => {
-        this.positioning = false;
         console.log('Error when starting positioning.', err);
         const message = `Error when starting positioning. ${err}`;
         this.presentToast(message, 'bottom', null);
+        this.stopPositioning();
       });
     });
   }
