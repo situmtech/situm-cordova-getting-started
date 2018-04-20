@@ -165,12 +165,13 @@ export class PositioningPage {
         lng: poi.coordinate.longitude
       }
       let icon: MarkerIcon = {
-        url: poi.category.icon_selected,
         size: {
           height: 35,
           width: 35
         }
       }
+      if (poi.category) icon.url = poi.category.icon_selected;
+
       let markerOptions: MarkerOptions = {
         icon: icon,
         position: markerPosition,
@@ -276,16 +277,20 @@ export class PositioningPage {
       accesible: this.accessible, 
       startingAngle: this.position.bearing.degrees,
     };
+
     // Calculates a route between two points
     // In this case, determining route between the current position and the second POI
     // More details in
     // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.requestDirections
-    cordova.plugins.Situm.requestDirections([this.building, this.position.position, this.pois[2], directionsOptionsMap], (route: any) => {
+    cordova.plugins.Situm.requestDirections([this.building, this.position, this.pois[0], directionsOptionsMap], (route: any) => {
       this.route = route;
       this.drawRouteOnMap(route);
       this.detector.detectChanges();
     }, (err: any) => {
       console.error(err);
+      const message = `Error when drawing the route. ${err}`;
+      this.presentToast(message, 'bottom', null);
+      return;
     });
   }
 
