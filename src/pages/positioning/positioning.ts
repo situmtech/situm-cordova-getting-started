@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { NavController, NavParams, Platform, Events, LoadingController, ToastController } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions, HtmlInfoWindow } from '@ionic-native/google-maps';
+import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions, HtmlInfoWindow, Polyline } from '@ionic-native/google-maps';
 import { MapButtonComponent } from '../../components/mapButton/mapButton';
 
 declare var cordova: any;
@@ -55,6 +55,7 @@ export class PositioningPage {
   poiCategories: any[];
   marker: Marker;
   pois: any[];
+  polyline: Polyline;
 
   accessible: boolean = false;
   navigating: boolean = false;
@@ -141,6 +142,7 @@ export class PositioningPage {
         this.presentToast(message, 'bottom', null);
         return;
       }
+      this.detector.detectChanges();
       this.fetchForPOICategories(building);
     });
   }
@@ -198,7 +200,7 @@ export class PositioningPage {
       }
       this.createPositionMarker();
       const locationOptions = this.mountLocationOptions();
-
+      
       // Set callback and starts listen onLocationChanged event
       // More details in 
       // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.startPositioning
@@ -252,10 +254,14 @@ export class PositioningPage {
       console.log("Position listener is not enabled.");
       return;
     }
-    cordova.plugins.Situm.stopPositioning(() => {
-      if (this.marker) this.marker.remove();
-      this.positioning = false;
-     });
+    this.platform.ready().then(() => {
+      cordova.plugins.Situm.stopPositioning(() => {
+        if (this.marker) this.marker.remove();
+        if (this.polyline) this.polyline.remove();
+        this.positioning = false;
+        this.detector.detectChanges();
+      });
+    });
   }
 
   private showRoute() {
@@ -277,6 +283,7 @@ export class PositioningPage {
     cordova.plugins.Situm.requestDirections([this.building, this.position.position, this.pois[2], directionsOptionsMap], (route: any) => {
       this.route = route;
       this.drawRouteOnMap(route);
+      this.detector.detectChanges();
     }, (err: any) => {
       console.error(err);
     });
@@ -294,7 +301,9 @@ export class PositioningPage {
         lng: point.coordinate.longitude
       });
     });
-    this.map.addPolyline(polylineOptions);
+    this.map.addPolyline(polylineOptions).then((polyline : Polyline) => {
+      this.polyline = polyline;
+    });
   }
 
   private updateAccessible() {
