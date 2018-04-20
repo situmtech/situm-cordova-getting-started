@@ -215,7 +215,10 @@ export class PositioningPage {
         this.detector.detectChanges();
 
       }, (err: any) => {
-        console.log('Error when starting positioning', err);
+        this.positioning = false;
+        console.log('Error when starting positioning.', err);
+        const message = `Error when starting positioning. ${err}`;
+        this.presentToast(message, 'bottom', null);
       });
     });
   }
@@ -348,7 +351,10 @@ export class PositioningPage {
 
   private createMarker(options : MarkerOptions, map, currentPosition) {
     map.addMarker(options).then((marker : Marker) => {
-      if (currentPosition) this.marker = marker;
+      if (currentPosition) {
+        this.marker = marker;
+        this.marker.showInfoWindow();
+      }
     });
   }
 
@@ -387,7 +393,7 @@ export class PositioningPage {
   presentToast(text, position, toastClass) {
     const toast = this.toastCtrl.create({
       message: text,
-      duration: 2000,
+      duration: 3000,
       position: position,
       cssClass: toastClass ? toastClass : ''
     });

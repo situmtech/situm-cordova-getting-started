@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { NavController, Platform, ToastController } from 'ionic-angular';
 import { PositioningPage } from '../positioning/positioning';
 import { USER_EMAIL, USER_API_KEY } from '../../services/situm';
 
@@ -18,7 +18,8 @@ export class HomePage {
   constructor(
     public platform: Platform,
     public navCtrl: NavController,
-    public detector: ChangeDetectorRef
+    public detector: ChangeDetectorRef,
+    public toastCtrl: ToastController 
   ) {};
 
   ionViewDidEnter() {
@@ -36,12 +37,24 @@ export class HomePage {
       this.buildings = res;
       this.detector.detectChanges();
     }, (error) => {
-      console.log('An error occurred when recovering the buildings');
+      const errorMsg = 'An error occurred when recovering the buildings.' 
+      console.log(`${errorMsg}`, error);
+      this.presentToast(`${errorMsg} ${error}`, 'bottom', null);
     });
   };
 
   showBuilding(building) {
     this.navCtrl.push(PositioningPage, { building: building });
+  }
+
+  presentToast(text, position, toastClass) {
+    const toast = this.toastCtrl.create({
+      message: text,
+      duration: 3000,
+      position: position,
+      cssClass: toastClass ? toastClass : ''
+    });
+    toast.present();
   }
 
 }
