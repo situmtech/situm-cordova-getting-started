@@ -23,12 +23,7 @@ npm install
   $ cordova plugin add --link <path_to_plugin_folder>/situm-cordova-plugin/
 ```
 
-Before launching the application it is necessary to create the `src/services/situm.ts` file and insert the following code:
-
-```
-export const USER_EMAIL = 'USER_EMAIL';
-export const USER_API_KEY = 'USER_API_KEY';
-```
+Before launching the application it is necessary to cover the credentials in the `src/services/situm.ts` file.
 
 So, `config.xml` file should contain one line like this:
 
