@@ -8,16 +8,12 @@ import { GoogleMaps } from '@ionic-native/google-maps';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { PositioningPage } from '../pages/positioning/positioning';
-import { NavbarComponent } from '../components/navbar/navbar';
-import { MapButtonComponent } from '../components/mapButton/mapButton';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    PositioningPage,
-    NavbarComponent,
-    MapButtonComponent
+    PositioningPage
   ],
   imports: [
     BrowserModule,

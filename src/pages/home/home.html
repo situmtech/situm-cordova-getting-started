@@ -1,10 +1,14 @@
 <ion-header>
-  <navbar title="Buildings"></navbar>
+  <ion-navbar>
+    <ion-title>
+      Buildings
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <ion-list *ngIf="buildings">
-    <ion-item *ngFor="let building of buildings" (click)="showBuilding(building)">
+    <ion-item *ngFor="let building of buildings" (click)="goToPositioning(building)">
       <p>{{building.buildingIdentifier}}</p>
       <p>{{building.name}}</p>
     </ion-item>
