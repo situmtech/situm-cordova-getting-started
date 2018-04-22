@@ -34,3 +34,5 @@ UserInterfaceState.xcuserstate
 
 info\.txt
 *.DS_Store
+
+src/services/situm.ts
