@@ -203,6 +203,8 @@ export class PositioningPage {
         this.presentToast(message, 'bottom', null);
         return;
       }
+      const loading = this.createLoading('Positioning...');
+      loading.present();
       this.createPositionMarker();
       const locationOptions = this.mountLocationOptions();
       
@@ -212,13 +214,14 @@ export class PositioningPage {
       cordova.plugins.Situm.startPositioning(locationOptions, (res: any) => {
         this.positioning = true;
         this.position = res;
-
+        
         if (!this.position || !this.position.coordinate) return;
         let position = this.mountPositionCoords(this.position);
   
         // Update the navigation
         if (this.navigating) this.updateNavigation(this.position);
         this.marker.setPosition(position);
+        loading.dismiss();
         this.detector.detectChanges();
 
       }, (err: any) => {
