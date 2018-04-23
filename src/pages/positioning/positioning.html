@@ -48,7 +48,7 @@
               [disabled]="routeConditionsNotSet()">Show default route</button>
       <ion-item>
         <ion-label>Accessible</ion-label>
-        <ion-checkbox [(ngModel)]="accessible" 
+        <ion-checkbox [checked]="accessible" 
                       (ionChange)="updateAccessible()"
                       [disabled]="routeConditionsNotSet()"></ion-checkbox>
       </ion-item>

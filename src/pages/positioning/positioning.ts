@@ -323,8 +323,9 @@ export class PositioningPage {
   }
 
   private updateAccessible() {
-    console.log('Accessible new state:' + this.accessible);
+    console.log(`Accessibility status: ${this.accessible}`);
     this.accessible = !this.accessible;
+    this.detector.detectChanges();
   }
 
   private createPositionMarker() {
@@ -377,7 +378,7 @@ export class PositioningPage {
     // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.setCacheMaxAge
     const maxAge : number = 7000;
     cordova.plugins.Situm.setCacheMaxAge(maxAge);
-    const msg = `The maximun age of cached responses has been set at ${maxAge} milliseconds.`
+    const msg = `The maximun age of cached responses has been set at ${maxAge} seconds.`
     this.presentToast(msg, 'bottom', null);
   }
 
