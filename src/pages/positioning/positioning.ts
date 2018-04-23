@@ -271,6 +271,13 @@ export class PositioningPage {
       this.presentToast(message, 'bottom', null);
       return;
     }
+
+    if (this.route) {
+      const message = 'The route is already painted on the map.';
+      this.presentToast(message, 'bottom', null);
+      return;
+    }
+    
     console.log("Position is: " + this.position.bearing.degrees);
     
     let directionsOptionsMap = {
