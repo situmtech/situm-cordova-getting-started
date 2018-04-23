@@ -123,37 +123,41 @@ export class PositioningPage {
   }
 
   private showPois() {
+    let loading = this.createLoading('Loading POIs...');
+    loading.present();
     if (!this.map) {
       const message = 'The map must be visible in order to show the POIs';
       this.presentToast(message, 'bottom', null);
       return;
     }
-    this.fetchForPOIs(this.building);
+    this.fetchForPOIs(this.building, loading);
   }
 
-  private fetchForPOIs(building) {
+  private fetchForPOIs(building, loading) {
     // Fetching for a building's  indoor POIs
     // More details in 
     // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.fetchIndoorPOIsFromBuilding
     cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(building, (res: any) => {
       this.pois = res;
       if (this.pois.length == 0) {
+        loading.dismiss();
         const message = 'This building has no POIs';
         this.presentToast(message, 'bottom', null);
         return;
       }
       this.detector.detectChanges();
-      this.fetchForPOICategories(building);
+      this.fetchForPOICategories(building, loading);
     });
   }
 
-  private fetchForPOICategories(building) {
+  private fetchForPOICategories(building, loading) {
     // Fetching for an user's POI categories
     // More details in 
     //http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.fetchPoiCategories
     cordova.plugins.Situm.fetchPoiCategories((res: any) => {
       this.poiCategories = res;
       this.drawPOIsOnMap();
+      loading.dismiss();
     });
   }
 
@@ -341,6 +345,8 @@ export class PositioningPage {
     // updateNavigationWithLocation method is called
     cordova.plugins.Situm.requestNavigationUpdates();
     this.navigating = true;
+    const msg = 'Added a listener to receive navigation updates';
+    this.presentToast(msg, 'bottom', null);
   }
 
   private removeNavigation() {
@@ -352,6 +358,8 @@ export class PositioningPage {
     // Removes the listener from navigation updates
     cordova.plugins.Situm.removeNavigationUpdates();
     this.navigating = false;
+    const msg = 'Removed the listener from navigation updates';
+    this.presentToast(msg, 'bottom', null);
   }
 
   private clearCache() {
@@ -359,15 +367,18 @@ export class PositioningPage {
     // More details in
     // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.invalidateCache
     cordova.plugins.Situm.invalidateCache();
+    const msg = `All resources in the cache have been invalidated.`
+    this.presentToast(msg, 'bottom', null);
   }
 
   private stablishCache() {
     // Sets the maximum age of a cached response.
     // More details in 
     // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.setCacheMaxAge
-    cordova.plugins.Situm.setCacheMaxAge(7000);
-    // Gets the maxium age of a cached response.
-    cordova.plugins.Situm.getCacheMaxAge();
+    const maxAge : number = 7000;
+    cordova.plugins.Situm.setCacheMaxAge(maxAge);
+    const msg = `The maximun age of cached responses has been set at ${maxAge} milliseconds.`
+    this.presentToast(msg, 'bottom', null);
   }
 
   private createMarker(options : MarkerOptions, map, currentPosition) {
