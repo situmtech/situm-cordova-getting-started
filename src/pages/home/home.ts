@@ -46,6 +46,7 @@ export class HomePage {
     }, (error) => {
       const errorMsg = 'An error occurred when recovering the buildings.' 
       console.log(`${errorMsg}`, error);
+      if (loading) loading.dismiss();
       this.presentToast(`${errorMsg} ${error}`, 'bottom', null);
     });
   };
