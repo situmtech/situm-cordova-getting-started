@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { NavController, Platform, ToastController } from 'ionic-angular';
+import { NavController, Platform, ToastController, LoadingController } from 'ionic-angular';
 import { PositioningPage } from '../positioning/positioning';
 import { USER_EMAIL, USER_API_KEY } from '../../services/situm';
 
@@ -19,7 +19,8 @@ export class HomePage {
     public platform: Platform,
     public navCtrl: NavController,
     public detector: ChangeDetectorRef,
-    public toastCtrl: ToastController 
+    public toastCtrl: ToastController,
+    public loadingCtrl: LoadingController
   ) {};
 
   ionViewDidEnter() {
@@ -30,11 +31,14 @@ export class HomePage {
   };
 
   public fetchBuildings() {
+    let loading = this.createLoading('Loading buildings...');
+    loading.present();
     // Fetchs the buildings for the current user
     // More details in
     // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.fetchBuildings
     cordova.plugins.Situm.fetchBuildings((res) => {
       this.buildings = res;
+      loading.dismiss();
       this.detector.detectChanges();
     }, (error) => {
       const errorMsg = 'An error occurred when recovering the buildings.' 
@@ -55,6 +59,12 @@ export class HomePage {
       cssClass: toastClass ? toastClass : ''
     });
     toast.present();
+  }
+
+  private createLoading(msg) {
+    return this.loadingCtrl.create({
+      content: msg
+    });
   }
 
 }
