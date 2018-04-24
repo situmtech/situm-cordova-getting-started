@@ -3,6 +3,7 @@ import { NavController, NavParams, Platform, Events, LoadingController, ToastCon
 import { DomSanitizer } from '@angular/platform-browser';
 import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions, HtmlInfoWindow, Polyline } from '@ionic-native/google-maps';
 import { MapButtonComponent } from '../../components/mapButton/mapButton';
+import { PermissionsService } from '../../services/permissions';
 
 declare var cordova: any;
 
@@ -70,7 +71,8 @@ export class PositioningPage {
     public sanitizer: DomSanitizer,
     public loadingCtrl: LoadingController,
     public googleMaps: GoogleMaps,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    private permissionsService : PermissionsService
   ) {
     this.building = this.navParams.get('building');
   }
@@ -192,45 +194,58 @@ export class PositioningPage {
   }
 
   private startPositioning() {
-    if (this.positioning == true) {
-      const message = 'Position listener is already enabled.';
-      this.presentToast(message, 'bottom', null);
-      return;
-    }
-    this.platform.ready().then(() => {
-      if (!this.map) {
-        const message = 'The map must be visible in order to launch the positioning';
-        this.presentToast(message, 'bottom', null);
-        return;
-      }
-      const loading = this.createLoading('Positioning...');
-      loading.present();
-      this.createPositionMarker();
-      const locationOptions = this.mountLocationOptions();
+    this.permissionsService.checkLocationPermissions().then(permission => {
+      console.log('Location permission?', permission);
+      if (permission) {
+        if (this.positioning == true) {
+          const message = 'Position listener is already enabled.';
+          this.presentToast(message, 'bottom', null);
+          return;
+        }
+        this.platform.ready().then(() => {
+          if (!this.map) {
+            const message = 'The map must be visible in order to launch the positioning';
+            this.presentToast(message, 'bottom', null);
+            return;
+          }
+          const loading = this.createLoading('Positioning...');
+          loading.present();
+          this.createPositionMarker();
+          const locationOptions = this.mountLocationOptions();
+          
+          // Set callback and starts listen onLocationChanged event
+          // More details in 
+          // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.startPositioning
+          cordova.plugins.Situm.startPositioning(locationOptions, (res: any) => {
+            this.positioning = true;
+            this.position = res;
+            
+            if (!this.position || !this.position.coordinate) return;
+            let position = this.mountPositionCoords(this.position);
       
-      // Set callback and starts listen onLocationChanged event
-      // More details in 
-      // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.startPositioning
-      cordova.plugins.Situm.startPositioning(locationOptions, (res: any) => {
-        this.positioning = true;
-        this.position = res;
-        
-        if (!this.position || !this.position.coordinate) return;
-        let position = this.mountPositionCoords(this.position);
-  
-        // Update the navigation
-        if (this.navigating) this.updateNavigation(this.position);
-        this.marker.setPosition(position);
-        loading.dismiss();
-        this.detector.detectChanges();
-
-      }, (err: any) => {
-        console.log('Error when starting positioning.', err);
-        const message = `Error when starting positioning. ${err}`;
+            // Update the navigation
+            if (this.navigating) this.updateNavigation(this.position);
+            this.marker.setPosition(position);
+            loading.dismiss();
+            this.detector.detectChanges();
+    
+          }, (err: any) => {
+            console.log('Error when starting positioning.', err);
+            const message = `Error when starting positioning. ${err}`;
+            this.presentToast(message, 'bottom', null);
+            this.stopPositioning();
+          });
+        });
+      } else {
+        const message = `You must have the location permission granted for positioning.`
         this.presentToast(message, 'bottom', null);
-        this.stopPositioning();
-      });
+      }
+    }).catch(error => {
+      console.log(error);
+      const message = `Error when requesting for location permissions. ${error}`
+      this.presentToast(message, 'bottom', null);
     });
+    
   }
 
   private mountLocationOptions() {
@@ -265,7 +280,10 @@ export class PositioningPage {
     this.platform.ready().then(() => {
       cordova.plugins.Situm.stopPositioning(() => {
         if (this.marker) this.marker.remove();
-        if (this.polyline) this.polyline.remove();
+        if (this.polyline) {
+          this.polyline.remove();
+          this.route = null;
+        }
         this.positioning = false;
         this.detector.detectChanges();
       });

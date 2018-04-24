@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "^5.2.10",
     "@ionic-native/barcode-scanner": "^4.3.3",
     "@ionic-native/core": "^4.7.0",
+    "@ionic-native/diagnostic": "^4.7.0",
     "@ionic-native/google-maps": "^4.7.0",
     "@ionic-native/http": "^4.3.1",
     "@ionic-native/in-app-browser": "^4.3.1",
@@ -47,6 +48,7 @@
     "cordova-plugin-statusbar": "^2.4.1",
     "cordova-plugin-whitelist": "^1.3.3",
     "cordova-sqlite-storage": "^2.3.0",
+    "cordova.plugins.diagnostic": "^4.0.5",
     "font-awesome": "^4.7.0",
     "ionic-angular": "3.9.2",
     "ionic-plugin-keyboard": "^2.2.1",
@@ -83,7 +85,8 @@
         "ANDROID_SUPPORT_V4_VERSION": "24.1.0"
       },
       "cordova-plugin-cocoapod-support": {},
-      "situm-cordova-plugin-official": {}
+      "situm-cordova-plugin-official": {},
+      "cordova.plugins.diagnostic": {}
     },
     "platforms": [
       "android",
