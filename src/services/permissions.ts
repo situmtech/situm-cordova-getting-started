@@ -56,22 +56,17 @@ export class PermissionsService {
 
   permissionGranted(status) : boolean {
     const grantedValue = this.diagnostic.permissionStatus.GRANTED;
-    console.log('Granted value', grantedValue);
-    console.log('Device status', status);
-    return status == grantedValue;
+    const grantedWhenInUseValue = this.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE;
+    return status == grantedValue || status == grantedWhenInUseValue;
   }
 
   permissionDenied(status) : boolean {
     const deniedValue = this.diagnostic.permissionStatus.DENIED;
-    console.log('Denied value', deniedValue);
-    console.log('Device status', status);
     return status == deniedValue;
   }
 
   permissionNotRequested(status) : boolean {
     const notRequestedValue = this.diagnostic.permissionStatus.NOT_REQUESTED;
-    console.log('Not requested value', notRequestedValue);
-    console.log('Device status', status);
     return status == notRequestedValue || status.toLowerCase() == 'not_determined';
   }
 

@@ -230,10 +230,11 @@ export class PositioningPage {
             this.detector.detectChanges();
     
           }, (err: any) => {
+            let errorMessage = err.match("reason=(.*),")[1];
+            this.stopPositioning(loading);
             console.log('Error when starting positioning.', err);
-            const message = `Error when starting positioning. ${err}`;
+            const message = `Error when starting positioning. ${errorMessage}`;
             this.presentToast(message, 'bottom', null);
-            this.stopPositioning();
           });
         });
       } else {
@@ -272,21 +273,21 @@ export class PositioningPage {
     });
   }
 
-  private stopPositioning() {
+  private stopPositioning(loading) {
     if (this.positioning == false) {
       console.log("Position listener is not enabled.");
+      if (loading) loading.dismiss();
       return;
     }
-    this.platform.ready().then(() => {
-      cordova.plugins.Situm.stopPositioning(() => {
-        if (this.marker) this.marker.remove();
-        if (this.polyline) {
-          this.polyline.remove();
-          this.route = null;
-        }
-        this.positioning = false;
-        this.detector.detectChanges();
-      });
+    cordova.plugins.Situm.stopPositioning(() => {
+      if (this.marker) this.marker.remove();
+      if (this.polyline) {
+        this.polyline.remove();
+        this.route = null;
+      }
+      this.positioning = false;
+      this.detector.detectChanges();
+      if (loading) loading.dismiss();
     });
   }
 
@@ -441,7 +442,7 @@ export class PositioningPage {
   }
 
   ionViewWillLeave() {
-    this.stopPositioning();
+    this.stopPositioning(null);
   }
 
   presentToast(text, position, toastClass) {
