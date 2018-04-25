@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { Diagnostic } from '@ionic-native/diagnostic';
 
+const NOT_DETERMINED = 'not_determined';
 
 @Injectable()
 export class PermissionsService {
@@ -37,6 +38,8 @@ export class PermissionsService {
       if (this.permissionNotRequested(status)) {
         this.diagnostic.requestLocationAuthorization().then(authorization => {
           resolve(this.permissionGranted(authorization));
+        }).catch(error => {
+          console.log('Error when requesting location authorization for the application', error);
         });
       }
     });
@@ -50,7 +53,11 @@ export class PermissionsService {
       }
       this.diagnostic.requestLocationAuthorization().then(authorization =>{
         resolve(this.permissionGranted(authorization));
+      }).catch(error => {
+        console.log('Error when requesting location authorization for the application', error);
       });
+    }).catch(error => {
+      console.log('Error checking if the application is authorized to use location.', error);
     });
   }
 
@@ -67,7 +74,7 @@ export class PermissionsService {
 
   permissionNotRequested(status) : boolean {
     const notRequestedValue = this.diagnostic.permissionStatus.NOT_REQUESTED;
-    return status == notRequestedValue || status.toLowerCase() == 'not_determined';
+    return status == notRequestedValue || status.toLowerCase() == NOT_DETERMINED;
   }
 
 }

@@ -27,6 +27,8 @@ export class HomePage {
     this.platform.ready().then(() => {
       cordova.plugins.Situm.setApiKey(USER_EMAIL, USER_API_KEY);
       this.fetchBuildings();
+    }).catch(error => {
+      console.log(error);
     });
   };
 

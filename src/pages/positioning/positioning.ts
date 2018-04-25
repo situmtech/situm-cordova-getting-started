@@ -97,6 +97,8 @@ export class PositioningPage {
           }).catch((err: any) =>  this.handleError(err, loading));
 
         });
+      }).catch(error => {
+        console.log(error);
       });
     }
   }
@@ -202,41 +204,40 @@ export class PositioningPage {
           this.presentToast(message, 'bottom', null);
           return;
         }
-        this.platform.ready().then(() => {
-          if (!this.map) {
-            const message = 'The map must be visible in order to launch the positioning';
-            this.presentToast(message, 'bottom', null);
-            return;
-          }
-          const loading = this.createLoading('Positioning...');
-          loading.present();
-          this.createPositionMarker();
-          const locationOptions = this.mountLocationOptions();
+        if (!this.map) {
+          const message = 'The map must be visible in order to launch the positioning';
+          this.presentToast(message, 'bottom', null);
+          return;
+        }
+        const loading = this.createLoading('Positioning...');
+        loading.present();
+        this.createPositionMarker();
+        const locationOptions = this.mountLocationOptions();
+        
+        // Set callback and starts listen onLocationChanged event
+        // More details in 
+        // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.startPositioning
+        cordova.plugins.Situm.startPositioning(locationOptions, (res: any) => {
+          this.positioning = true;
+          this.position = res;
           
-          // Set callback and starts listen onLocationChanged event
-          // More details in 
-          // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.startPositioning
-          cordova.plugins.Situm.startPositioning(locationOptions, (res: any) => {
-            this.positioning = true;
-            this.position = res;
-            
-            if (!this.position || !this.position.coordinate) return;
-            let position = this.mountPositionCoords(this.position);
-      
-            // Update the navigation
-            if (this.navigating) this.updateNavigation(this.position);
-            this.marker.setPosition(position);
-            loading.dismiss();
-            this.detector.detectChanges();
+          if (!this.position || !this.position.coordinate) return;
+          let position = this.mountPositionCoords(this.position);
     
-          }, (err: any) => {
-            let errorMessage = err.match("reason=(.*),")[1];
-            this.stopPositioning(loading);
-            console.log('Error when starting positioning.', err);
-            const message = `Error when starting positioning. ${errorMessage}`;
-            this.presentToast(message, 'bottom', null);
-          });
+          // Update the navigation
+          if (this.navigating) this.updateNavigation(this.position);
+          this.marker.setPosition(position);
+          loading.dismiss();
+          this.detector.detectChanges();
+  
+        }, (err: any) => {
+          let errorMessage = err.match("reason=(.*),")[1];
+          this.stopPositioning(loading);
+          console.log('Error when starting positioning.', err);
+          const message = `Error when starting positioning. ${errorMessage}`;
+          this.presentToast(message, 'bottom', null);
         });
+
       } else {
         const message = `You must have the location permission granted for positioning.`
         this.presentToast(message, 'bottom', null);
