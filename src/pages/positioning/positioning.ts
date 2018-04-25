@@ -231,7 +231,8 @@ export class PositioningPage {
           this.detector.detectChanges();
   
         }, (err: any) => {
-          let errorMessage = err.match("reason=(.*),")[1];
+          const reason = err.match("reason=(.*),");
+          let errorMessage =  reason ? reason[1] : err;
           this.stopPositioning(loading);
           console.log('Error when starting positioning.', err);
           const message = `Error when starting positioning. ${errorMessage}`;
