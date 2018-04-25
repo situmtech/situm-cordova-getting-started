@@ -122,7 +122,7 @@ export class PositioningPage {
       bearing: this.building.rotation * 180 / Math.PI
     }
     this.map.addGroundOverlay(groundOptions).then(() => {
-      loading.dismiss();
+      this.hideLoading(loading);
     }).catch((err: any) => this.handleError(err, loading));
   }
 
@@ -144,7 +144,7 @@ export class PositioningPage {
     cordova.plugins.Situm.fetchIndoorPOIsFromBuilding(building, (res: any) => {
       this.pois = res;
       if (this.pois.length == 0) {
-        loading.dismiss();
+        this.hideLoading(loading);
         const message = 'This building has no POIs';
         this.presentToast(message, 'bottom', null);
         return;
@@ -161,7 +161,7 @@ export class PositioningPage {
     cordova.plugins.Situm.fetchPoiCategories((res: any) => {
       this.poiCategories = res;
       this.drawPOIsOnMap();
-      loading.dismiss();
+      this.hideLoading(loading);
     });
   }
 
@@ -209,11 +209,11 @@ export class PositioningPage {
           this.presentToast(message, 'bottom', null);
           return;
         }
-        const loading = this.createLoading('Positioning...');
+        let loading = this.createLoading('Positioning...');
         loading.present();
         this.createPositionMarker();
         const locationOptions = this.mountLocationOptions();
-        
+            
         // Set callback and starts listen onLocationChanged event
         // More details in 
         // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.startPositioning
@@ -223,11 +223,11 @@ export class PositioningPage {
           
           if (!this.position || !this.position.coordinate) return;
           let position = this.mountPositionCoords(this.position);
-    
+      
           // Update the navigation
           if (this.navigating) this.updateNavigation(this.position);
           this.marker.setPosition(position);
-          loading.dismiss();
+          this.hideLoading(loading);
           this.detector.detectChanges();
   
         }, (err: any) => {
@@ -238,7 +238,6 @@ export class PositioningPage {
           const message = `Error when starting positioning. ${errorMessage}`;
           this.presentToast(message, 'bottom', null);
         });
-
       } else {
         const message = `You must have the location permission granted for positioning.`
         this.presentToast(message, 'bottom', null);
@@ -278,7 +277,7 @@ export class PositioningPage {
   private stopPositioning(loading) {
     if (this.positioning == false) {
       console.log("Position listener is not enabled.");
-      if (loading) loading.dismiss();
+      this.hideLoading(loading);
       return;
     }
     cordova.plugins.Situm.stopPositioning(() => {
@@ -289,7 +288,7 @@ export class PositioningPage {
       }
       this.positioning = false;
       this.detector.detectChanges();
-      if (loading) loading.dismiss();
+      this.hideLoading(loading);
     });
   }
 
@@ -416,11 +415,18 @@ export class PositioningPage {
   }
 
   private handleError(error, loading) {
-    if (loading) loading.dismiss();
+    this.hideLoading(loading);
   }
 
   private getElementById(id) : HTMLElement {
     return document.getElementById(id);
+  }
+
+  private hideLoading(loading) {
+    if (typeof loading != undefined && typeof loading != null ) {
+      loading.dismissAll();
+      loading = null;
+    }
   }
 
   private createLoading(msg) {
