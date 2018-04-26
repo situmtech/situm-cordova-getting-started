@@ -4,16 +4,22 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { GoogleMaps } from '@ionic-native/google-maps';
+import { Diagnostic } from '@ionic-native/diagnostic';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { PositioningPage } from '../pages/positioning/positioning';
+import { NavbarComponent } from '../components/navbar/navbar';
+import { MapButtonComponent } from '../components/mapButton/mapButton';
+import { PermissionsService } from '../services/permissions';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    PositioningPage
+    PositioningPage,
+    NavbarComponent,
+    MapButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +35,9 @@ import { PositioningPage } from '../pages/positioning/positioning';
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    GoogleMaps
+    GoogleMaps,
+    Diagnostic,
+    PermissionsService
   ]
 })
 export class AppModule { }
