@@ -20,7 +20,7 @@
     "@angular/compiler-cli": "^5.2.10",
     "@angular/core": "^5.2.10",
     "@angular/forms": "^5.2.10",
-    "@angular/http": "^5.2.10",
+    "@angular/http": "^2.4.10",
     "@angular/platform-browser": "^5.2.10",
     "@angular/platform-browser-dynamic": "^5.2.10",
     "@ionic-native/barcode-scanner": "^4.3.3",
@@ -34,32 +34,36 @@
     "@ionic-native/sqlite": "^4.1.0",
     "@ionic-native/status-bar": "^4.3.1",
     "@ionic/storage": "2.1.3",
+    "angular": "^1.7.0",
+    "cordova": "^8.0.0",
     "cordova-android": "6.4.0",
     "cordova-browser": "^4.1.0",
-    "cordova-ios": "4.5.4",
+    "cordova-ios": "^4.5.4",
     "cordova-plugin-advanced-http": "^1.7.0",
     "cordova-plugin-cocoapod-support": "^1.3.0",
     "cordova-plugin-device": "^1.1.7",
     "cordova-plugin-file": "^4.3.3",
-    "cordova-plugin-googlemaps": "^2.2.2",
-    "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git#2.6.0",
+    "cordova-plugin-googlemaps": "^2.3.6",
+    "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git#2.7.0",
     "cordova-plugin-nativestorage": "^2.2.2",
     "cordova-plugin-splashscreen": "^4.1.0",
-    "cordova-plugin-statusbar": "^2.4.1",
+    "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
     "cordova-sqlite-storage": "^2.3.0",
-    "cordova.plugins.diagnostic": "^4.0.5",
+    "cordova.plugins.diagnostic": "^4.0.8",
     "font-awesome": "^4.7.0",
     "ionic-angular": "3.9.2",
     "ionic-plugin-keyboard": "^2.2.1",
     "ionicons": "3.0.0",
     "ios-deploy": "^1.9.2",
-    "moment": "^2.15.1",
+    "minimist": "^1.2.0",
+    "moment": "^2.22.1",
     "ng2-translate": "^5.0.0",
     "rxjs": "5.5.2",
-    "situm-cordova-plugin-official": "^1.5.2",
+    "situm-cordova-plugin-official": "^1.7.2",
     "sw-toolbox": "3.6.0",
     "tar-stream": "^1.5.5",
+    "xml2js": "^0.4.19",
     "zone.js": "0.8.18"
   },
   "devDependencies": {
@@ -85,12 +89,12 @@
         "ANDROID_SUPPORT_V4_VERSION": "24.1.0"
       },
       "cordova-plugin-cocoapod-support": {},
-      "situm-cordova-plugin-official": {},
-      "cordova.plugins.diagnostic": {}
+      "cordova.plugins.diagnostic": {},
+      "situm-cordova-plugin-official": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
