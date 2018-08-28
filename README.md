@@ -5,6 +5,7 @@ NOTE: This app is only a use-case for testing purposes. It may not be up to date
 * [Usage](#usage)
 * [Run Android version](#run-android-version)
 * [Run iOS version](#run-ios-version)
+* [Support information](#support-info)
 
 ## Usage
 
@@ -43,3 +44,7 @@ So, `config.xml` file should contain one line like this:
 - **Run from command line**: `$ ionic cordova run ios`
 
 - **Run from Xcode**: Go to platforms/ios folder and open `Situm Cordova Getting Started.xcworkspace`
+
+## <a name="supportinfo"></a> Support information
+
+For any question or bug report, please send an email to [support@situm.es](mailto:support@situm.es)
