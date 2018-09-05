@@ -17,11 +17,20 @@ NOTE: This app is only a use-case for testing purposes. It may not be up to date
 npm install
 ```
 
-3) Link development plugin folder: 
+3) Add desired platforms:
 
 ```
-  $ cd situm-cordova-getting-started
-  $ cordova plugin add --link <path_to_plugin_folder>/situm-cordova-plugin/
+$ cordova platform add android //if you want to generate an Android app
+$ cordova platform add iOS //if you wat yo generate an iOS app
+```
+
+4) Link development plugin folder (optional): 
+
+In case you have a local copy of Situm Cordova Plugin, you may want to add it to the project, in order to be able to modify or debug it. If this is the case, you should remove the current plugin version from npm and add the local one. Provided that the plugin is located at the parent folder, this can be done as follows:
+
+```
+  $ ionic cordova plugin remove situm-cordova-plugin-official
+  $ cordova plugin add --link <path_to_plugin_folder>/situm-cordova-plugin-official/
 ```
 
 Before launching the application it is necessary to cover the credentials in the `src/services/situm.ts` file.
