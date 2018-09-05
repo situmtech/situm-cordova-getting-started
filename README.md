@@ -9,7 +9,13 @@ NOTE: This app is only a use-case for testing purposes. It may not be up to date
 
 ## Usage
 
-1) Ionic installation : https://ionicframework.com/docs/intro/installation/
+1) Previous requirements 
+
+* [NodeJS](https://nodejs.org/en/)
+* [Ionic framework](https://ionicframework.com/docs/intro/installation/)
+* Git
+* Java JDK
+
 
 2) Initialize project:
 
@@ -24,7 +30,15 @@ $ cordova platform add android //if you want to generate an Android app
 $ cordova platform add iOS //if you wat yo generate an iOS app
 ```
 
-4) Link development plugin folder (optional): 
+4) Add credentials
+Before launching the application it is necessary to cover the credentials in the `src/services/situm.ts` file.
+
+5) Install necessary dependencies
+```
+npm install @ionic/app-scripts@latest --save-dev
+```
+
+6) Link development plugin folder (optional): 
 
 In case you have a local copy of Situm Cordova Plugin, you may want to add it to the project, in order to be able to modify or debug it. If this is the case, you should remove the current plugin version from npm and add the local one. Provided that the plugin is located at the parent folder, this can be done as follows:
 
@@ -33,13 +47,11 @@ In case you have a local copy of Situm Cordova Plugin, you may want to add it to
   $ cordova plugin add --link <path_to_plugin_folder>/situm-cordova-plugin-official/
 ```
 
-Before launching the application it is necessary to cover the credentials in the `src/services/situm.ts` file.
-
 So, `config.xml` file should contain one line like this:
 
 
     <plugin name="situm-cordova-plugin" spec="file:../situm-cordova-plugin" />
-
+    
 
 ## Run Android version
 
