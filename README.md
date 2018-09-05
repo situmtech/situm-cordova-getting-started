@@ -21,6 +21,7 @@ NOTE: This app is only a use-case for testing purposes. It may not be up to date
 * Java JDK 
 * [Android Studio](https://developer.android.com/studio/) (recommended) or at least [Gradle](https://gradle.org/install/)
 * Android SDK 26
+* Android build tools 26.0.2
 
 #### iOS
 * A computer running macOS
