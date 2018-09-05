@@ -20,6 +20,7 @@ NOTE: This app is only a use-case for testing purposes. It may not be up to date
 #### Android
 * Java JDK 
 * [Android Studio](https://developer.android.com/studio/) (recommended) or at least [Gradle](https://gradle.org/install/)
+* Android SDK 26
 
 #### iOS
 * A computer running macOS
