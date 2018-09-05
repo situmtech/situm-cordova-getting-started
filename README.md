@@ -2,6 +2,7 @@
 
 NOTE: This app is only a use-case for testing purposes. It may not be up to date or optimized.
 
+## Table of contents
 * [Usage](#usage)
 * [Run Android version](#run-android-version)
 * [Run iOS version](#run-ios-version)
