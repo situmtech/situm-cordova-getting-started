@@ -34,6 +34,12 @@ NOTE: This app is only a use-case for testing purposes. It may not be up to date
 npm install
 ```
 
+Create `www` folder if not exists: 
+
+```
+mkdir www
+```
+
 ### 3. Add desired platforms:
 
 ```
