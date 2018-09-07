@@ -130,16 +130,6 @@ export class PositioningPage {
     this.map.addGroundOverlay(groundOptions).then(() => {
       this.hideLoading(loading);
     }).catch((err: any) => this.handleError(err, loading));
-
-    this.drawBound(this.building.bounds.northEast);
-    this.drawBound(this.building.bounds.northWest);
-    this.drawBound(this.building.bounds.southEast);
-    this.drawBound(this.building.bounds.southWest);
-
-    /*bounds.forEach(bound => {
-      this.drawBound(bound);
-    });*/
-
   }
 
 
