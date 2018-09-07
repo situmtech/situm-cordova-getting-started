@@ -40,22 +40,27 @@ Create `www` folder if not exists:
 mkdir www
 ```
 
-### 3. Add desired platforms:
+### 4. iOS only. Install ios-deploy
+```
+npm install ios-deploy
+```
+
+### 4. Add desired platforms:
 
 ```
 $ cordova platform add android //if you want to generate an Android app
 $ cordova platform add iOS //if you wat yo generate an iOS app
 ```
 
-### 4. Add credentials
+### 5. Add credentials
 Before launching the application it is necessary to cover the credentials in the `src/services/situm.ts` file.
 
-### 5. Install necessary dependencies
+### 6. Install necessary dependencies
 ```
 npm install @ionic/app-scripts@latest --save-dev
 ```
 
-### 6. Link development plugin folder (optional): 
+### 7. Link development plugin folder (optional): 
 
 In case you have a local copy of Situm Cordova Plugin, you may want to add it to the project, in order to be able to modify or debug it. If this is the case, you should remove the current plugin version from npm and add the local one. Provided that the plugin is located at the parent folder, this can be done as follows:
 
