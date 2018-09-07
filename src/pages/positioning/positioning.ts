@@ -117,7 +117,7 @@ export class PositioningPage {
   private mountOverlay(loading) {
     console.log(this.building.bounds);
     let bounds = this.getBounds(this.building);
-    let bearing = (this.building.rotation * 180 / Math.PI) + 360;
+    let bearing = (this.building.rotation * 180 / Math.PI);
     console.log(bounds);
     console.log(bearing);
     console.log(this.currentFloor.mapUrl);
