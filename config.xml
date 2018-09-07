@@ -86,7 +86,7 @@
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="cordova-plugin-cocoapod-support" spec="^1.3.0" />
-    <plugin name="cordova-plugin-googlemaps" spec="^2.2.2">
+    <plugin name="cordova-plugin-googlemaps" spec="2.2.2">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyD3RIddnImiOjtE0ep8mV6FrXEEcc6Uaz8" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyDNN18tWO2MVvC3dhx2H9WiuGyhdk5cbbY" />
         <variable name="LOCATION_WHEN_IN_USE_DESCRIPTION" value="Show your location on the map" />
@@ -96,7 +96,7 @@
     </plugin>
     <plugin name="cordova-plugin-cocoapod-support" spec="^1.3.0" />
     <plugin name="cordova.plugins.diagnostic" spec="^4.0.5" />
-    <engine name="android" spec="6.4.0" />
-    <engine name="ios" spec="~4.5.4" />
     <plugin name="situm-cordova-plugin-official" spec="^1.7.2" />
+    <engine name="ios" spec="^4.5.4" />
+    <engine name="android" spec="^6.4.0" />
 </widget>

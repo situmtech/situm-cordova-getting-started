@@ -115,16 +115,46 @@ export class PositioningPage {
   }
 
   private mountOverlay(loading) {
+    console.log(this.building.bounds);
     let bounds = this.getBounds(this.building);
+    let bearing = (this.building.rotation * 180 / Math.PI);
+    console.log(bounds);
+    console.log(bearing);
+    console.log(this.currentFloor.mapUrl);
     let groundOptions: GroundOverlayOptions = {
       url: this.currentFloor.mapUrl,
       bounds: bounds,
-      bearing: this.building.rotation * 180 / Math.PI
+      bearing: bearing
     }
+    console.log(groundOptions);
     this.map.addGroundOverlay(groundOptions).then(() => {
       this.hideLoading(loading);
     }).catch((err: any) => this.handleError(err, loading));
   }
+
+
+  private drawBound(bound) {
+
+    console.log(bound);
+
+      let markerPosition: ILatLng = {
+        lat: bound.latitude,
+        lng: bound.longitude
+      }
+      let icon: MarkerIcon = {
+        size: {
+          height: 35,
+          width: 35
+        }
+      }
+
+      let markerOptions: MarkerOptions = {
+        icon: icon,
+        position: markerPosition
+      };
+      this.createMarker(markerOptions, this.map, false);
+  }
+
 
   private showPois() {
     let loading = this.createLoading('Loading POIs...');
@@ -437,8 +467,6 @@ export class PositioningPage {
 
   private getBounds(building) {
     if (!building) return;
-    let boundsSW: LatLng = new LatLng(building.bounds.southWest.latitude, building.bounds.southWest.longitude);
-    let boundsNE: LatLng = new LatLng(building.bounds.northEast.latitude, building.bounds.northEast.longitude);
     return [
       { lat: building.bounds.southWest.latitude, lng: building.bounds.southWest.longitude },
       { lat: building.bounds.northEast.latitude, lng: building.bounds.northEast.longitude }
@@ -489,3 +517,4 @@ export class PositioningPage {
   }
 
 }
+ 
