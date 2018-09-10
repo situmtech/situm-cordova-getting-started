@@ -96,7 +96,7 @@
     </plugin>
     <plugin name="cordova-plugin-cocoapod-support" spec="^1.3.0" />
     <plugin name="cordova.plugins.diagnostic" spec="^4.0.5" />
-    <plugin name="situm-cordova-plugin-official" spec="^1.7.2" />
+    <plugin name="situm-cordova-plugin-official" spec="^1.8.1" />
     <engine name="ios" spec="^4.5.4" />
     <engine name="android" spec="^6.4.0" />
 </widget>
