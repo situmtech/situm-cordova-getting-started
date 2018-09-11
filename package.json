@@ -43,7 +43,7 @@
     "cordova-plugin-cocoapod-support": "^1.6.0",
     "cordova-plugin-device": "^1.1.7",
     "cordova-plugin-file": "^4.3.3",
-    "cordova-plugin-googlemaps": "^2.2.2",
+    "cordova-plugin-googlemaps": "^2.4.2",
     "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git#2.7.0",
     "cordova-plugin-nativestorage": "^2.2.2",
     "cordova-plugin-splashscreen": "^4.1.0",

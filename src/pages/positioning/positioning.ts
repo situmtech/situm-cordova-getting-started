@@ -124,7 +124,8 @@ export class PositioningPage {
     let groundOptions: GroundOverlayOptions = {
       url: this.currentFloor.mapUrl,
       bounds: bounds,
-      bearing: bearing
+      bearing: bearing,
+      anchor: [0.5, 0.5]
     }
     console.log(groundOptions);
     this.map.addGroundOverlay(groundOptions).then(() => {
