@@ -363,6 +363,7 @@ export class PositioningPage {
     let polylineOptions: PolylineOptions = {
       color: ROUTE_COLOR,
       width: 4,
+      zIndex: 1,
       points: []
     };
     route.points.forEach(point => {
