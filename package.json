@@ -58,7 +58,7 @@
     "moment": "^2.22.1",
     "ng2-translate": "^5.0.0",
     "rxjs": "5.5.2",
-    "situm-cordova-plugin-official": "^1.8.4",
+    "situm-cordova-plugin-official": "^1.8.9",
     "sw-toolbox": "3.6.0",
     "tar-stream": "^1.5.5",
     "xml2js": "^0.4.19",
@@ -91,8 +91,8 @@
       "situm-cordova-plugin-official": {}
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   }
 }
