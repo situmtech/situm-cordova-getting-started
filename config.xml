@@ -79,6 +79,7 @@
         <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+        <preference name="deployment-target" value="9.0" />
     </platform>
     <plugin name="cordova-plugin-device" spec="^1.1.6" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
@@ -96,7 +97,7 @@
         <variable name="LOCATION_WHEN_IN_USE_DESCRIPTION" value="This app wants to get your location while this app runs only." />
         <variable name="LOCATION_ALWAYS_USAGE_DESCRIPTION" value="This app wants to get your location always, even this app runs in background." />
     </plugin>
-    <plugin name="situm-cordova-plugin-official" spec="^1.8.9" />
     <engine name="android" spec="^6.4.0" />
     <engine name="ios" spec="4.5.5" />
+    <plugin name="situm-cordova-plugin-official" spec="^1.9.0" />
 </widget>
