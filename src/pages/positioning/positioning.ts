@@ -284,7 +284,10 @@ export class PositioningPage {
   private mountLocationOptions() {
     let locationOptions = new Array();
     locationOptions.push(this.building);
-    defaultOptionsMap['buildingIdentifier'] = this.building.buildingIdentifier,
+    let defaultOptionsMap = {
+      buildingIdentifier: this.building.buildingIdentifier, 
+      useGps: true,
+    };
     locationOptions.push(defaultOptionsMap);
     return locationOptions;
   }
