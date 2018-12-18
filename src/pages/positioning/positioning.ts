@@ -301,8 +301,7 @@ export class PositioningPage {
 
   private updateNavigation(position) {
     // Sends a position to the location manager for calculate the navigation progress
-    cordova.plugins.Situm.updateNavigationWithLocation([position], function(error) {
-      console.log(error);
+    cordova.plugins.Situm.updateNavigationWithLocation(position, function(result) {
     }, function (error) {
       console.log(error);
     });
@@ -402,7 +401,25 @@ export class PositioningPage {
     }
     // Adds a listener to receive navigation updates when the 
     // updateNavigationWithLocation method is called
-    cordova.plugins.Situm.requestNavigationUpdates();
+
+    var navigationOptions = new Object();
+    navigationOptions["distanceToGoalThreshold"] = 6;
+    navigationOptions["outsideRouteThreshold"] = 12;
+    navigationOptions["roundIndicationsStep"] = 5;
+    cordova.plugins.Situm.requestNavigationUpdates([navigationOptions], (result)=> {
+      console.log(result);
+      if (result.currentIndication) {
+          const msg = result.currentIndication.humanReadableMessage;
+          this.presentToast(msg, 'bottom', null);
+          console.log(result.currentIndication.humanReadableMessage);
+          console.log(result.nextIndication.humanReadableMessage);
+          console.log(result.closestLocationInRoute);
+      }
+    }, 
+    function(error) {
+      console.log(error);
+    });
+
     this.navigating = true;
     const msg = 'Added a listener to receive navigation updates';
     this.presentToast(msg, 'bottom', null);
