@@ -209,7 +209,7 @@ export class PositioningPage {
           width: 35
         }
       }
-      if (poi.category) icon.url = poi.category.icon_selected;
+      if (poi.category) icon.url = `https://dashboard.situm.es${poi.category.icon_selected}`;
 
       let markerOptions: MarkerOptions = {
         icon: icon,
