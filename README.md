@@ -48,7 +48,7 @@ npm install ios-deploy
 ### 4. Add desired platforms:
 
 ```
-$ cordova platform add android //if you want to generate an Android app
+$ cordova platform add android@8.0.0 //if you want to generate an Android app (android platform above 7.0.0)
 $ cordova platform add iOS //if you wat yo generate an iOS app
 ```
 
