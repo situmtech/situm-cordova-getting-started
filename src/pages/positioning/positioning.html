@@ -95,6 +95,33 @@
     </ion-col>
   </ion-row>
 
+  <ion-row>
+    <ion-col col-6>
+      <button ion-button
+              item-start 
+              full 
+              small 
+              color="light" 
+              (click)="requestRT()">Request RT</button>
+    </ion-col>
+    <ion-col col-6>
+      <button ion-button 
+              item-end 
+              full 
+              small 
+              color="dark" 
+              (click)="removeRT()">Remove RT</button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-list>
+      <ion-item *ngFor="let floor of floorsArray">
+        <ion-label (click)="selectedLevel(floor)">{{floor.floor}} {{floor.name}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-row>
+
   <ion-item>
     <ion-row class="map">
       <ion-col class="map">
