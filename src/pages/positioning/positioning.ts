@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { NavController, NavParams, Platform, Events, LoadingController, ToastController } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions, HtmlInfoWindow, Polyline } from '@ionic-native/google-maps';
+import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, LatLng, ILatLng, GroundOverlayOptions, GroundOverlay, MarkerOptions, MarkerIcon, Marker, PolylineOptions, HtmlInfoWindow, Polyline, PolygonOptions, Polygon, Poly } from '@ionic-native/google-maps';
 import { MapButtonComponent } from '../../components/mapButton/mapButton';
 import { PermissionsService } from '../../services/permissions';
 
@@ -62,6 +62,13 @@ export class PositioningPage {
   navigating: boolean = false;
   route: any;
 
+  buildingInfo: any;
+  floorsArray: any[];
+
+  // Markers for positions of other devices
+  rtMarkers: Marker[];
+  geofencesPolygons: Polygon[];
+
   constructor(
     public platform: Platform,
     public navCtrl: NavController,
@@ -75,6 +82,15 @@ export class PositioningPage {
     private permissionsService : PermissionsService
   ) {
     this.building = this.navParams.get('building');
+
+    this.floorsArray = new Array<string>();
+
+    this.rtMarkers = new Array<Marker>();
+    this.geofencesPolygons = new Array<Polygon>();
+  }
+
+  private showFloor(identifier) {
+  // show selector...   
   }
 
   private showMap(event) {
@@ -86,17 +102,38 @@ export class PositioningPage {
         // Fetchs all floors of a building
         // More details in
         // http://developers.situm.es/sdk_documentation/cordova/jsdoc/1.3.10/symbols/Situm.html#.fetchFloorsFromBuilding
-        cordova.plugins.Situm.fetchFloorsFromBuilding(this.building, (res) => {
-          this.floors = res;
-          this.currentFloor = res[0];
+        cordova.plugins.Situm.fetchBuildingInfo(this.building, (res) => {
+          // buildingInfo.floors
+          this.buildingInfo = res;
+          console.log(res);
+          this.floors = res.floors;
+          this.currentFloor = this.floors[0];
 
+          console.log(this);
           this.mountMap();
 
+          console.log(this);
+          console.log(this.map);
+
+          this.floorsArray = [];
+
+          for (var i=0; i < this.floors.length; i++) {
+            this.floorsArray.push(this.floors[i])
+          }
+          
           this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
             this.mountOverlay(loading);
           }).catch((err: any) =>  this.handleError(err, loading));
-
-        });
+          
+          cordova.plugins.Situm.fetchGeofencesFromBuilding(this.building, (geofences) => {
+            this.buildingInfo.geofences = geofences; // Assign geofences to building Info structure
+          }, (error) => {
+            console.log("Error retrieving geofences" + error);
+          });
+          
+        }, (error) => {
+          console.log("Error retrieving building info" + error);
+      });
       }).catch(error => {
         console.log(error);
       });
@@ -129,10 +166,48 @@ export class PositioningPage {
     }
     console.log(groundOptions);
     this.map.addGroundOverlay(groundOptions).then(() => {
-      this.hideLoading(loading);
+    this.hideLoading(loading);
+
+    // show geofences of the selected floor (important)
+    // For each geofence I should display a new layer or something like that
+    this.buildingInfo.geofences.forEach(element => {
+      
+      if (!(element.floorIdentifier == this.currentFloor.identifier))  {
+        return;
+      }
+
+      // Selected geofence
+      let polygonOptions: PolygonOptions = {
+        points: this.latLngs(element.polygonPoints),
+        zIndex: 3,
+        strokeColor: "black",
+        strokeWidth: 5,
+        fillColor: 'yellow' // 0x7Ff9ff80
+      };
+
+
+      this.map.addPolygon(polygonOptions).then((polygon: Polygon) => {
+          // Add to somewhere so we can remove it later
+          this.geofencesPolygons.push(polygon);
+          
+      });
+
+    });
+
     }).catch((err: any) => this.handleError(err, loading));
   }
 
+  private latLngs(points) {
+    var coordinates = new Array<ILatLng>();
+    points.forEach(element => {
+      let latLng: ILatLng = {
+        lat: element.coordinate.latitude,
+        lng: element.coordinate.longitude
+      }
+      coordinates.push(latLng);
+    });
+    return coordinates;
+  }
 
   private drawBound(bound) {
 
@@ -269,6 +344,11 @@ export class PositioningPage {
           const message = `Error when starting positioning. ${errorMessage}`;
           this.presentToast(message, 'bottom', null);
         });
+
+        // Start realtime manager -> Display positions in there
+        this.requestRT();
+
+
       } else {
         const message = `You must have the location permission granted for positioning.`
         this.presentToast(message, 'bottom', null);
@@ -279,6 +359,42 @@ export class PositioningPage {
       this.presentToast(message, 'bottom', null);
     });
     
+  }
+
+  private displayFloor(floor) {
+    // Check if actual floor is the same as displayed .. then do nothing
+
+    if (this.currentFloor.identifier == floor.identifier) {
+      return;
+    }
+
+    this.currentFloor = floor;
+
+
+
+
+    let loading = this.createLoading('Loading map...');
+    loading.present();
+
+    // Remove current information
+
+    this.geofencesPolygons.forEach(element => {
+      element.remove();
+    });
+    this.geofencesPolygons = new Array<Polygon>();
+
+    this.mountOverlay(loading);
+    // Display the image
+
+    // Display pois
+
+    // Display geofences
+
+    // Display RT if any ?
+
+
+
+
   }
 
   private mountLocationOptions() {
@@ -321,6 +437,9 @@ export class PositioningPage {
       this.detector.detectChanges();
       this.hideLoading(loading);
     });
+
+    // Remove realtime positions 
+    this.removeRT();
   }
 
   private showRoute() {
@@ -435,6 +554,106 @@ export class PositioningPage {
     cordova.plugins.Situm.setCacheMaxAge(maxAge);
     const msg = `The maximun age of cached responses has been set at ${maxAge} seconds.`
     this.presentToast(msg, 'bottom', null);
+  }
+
+  private selectedLevel(floor) { // include the index or floor
+    console.log("Selected level" + floor);
+    console.log("Level identified by " + floor.identifier);
+    this.displayFloor(floor);
+  }
+
+  // Load Levels
+  private loadLevels() {
+    // Find the list elements
+    
+    // Remove previous elements
+
+    // Insert all the elements
+
+  }
+
+  private requestRT() {
+    const request = {
+      building: this.building,
+      pollTime: 3000, // time in milliseconds
+    }
+    
+    const callback = (res) => {
+      console.log("Success getting realtime updates ", res);
+
+      // Check if the map is already present
+
+      // Display markers
+      // Remove previous markers
+      this.rtMarkers.forEach(element => {
+        // Hide or remove them
+        element.remove();
+      });
+      this.rtMarkers = new Array<Marker>();
+      // Add new markers
+      res.locations.forEach(element => {
+
+        if (!(element.floorIdentifier == this.currentFloor.identifier)) {
+          return;
+        }
+
+        // Create options
+        let markerPosition: ILatLng = {
+          lat: element.coordinate.latitude,
+          lng: element.coordinate.longitude,
+        }
+
+        let icon: MarkerIcon = {
+          size: {
+            height: 35,
+            width: 35
+          }
+        }
+
+        let markerOptions: MarkerOptions = {
+          icon: icon,
+          position: markerPosition,
+          title: `${element.deviceId}`
+        };
+        this.createMarkerStoring(markerOptions, this.map, false, true);
+
+      });
+      // Create new ones
+
+      // Assign them to markers if neccessary in order to clear them later
+
+    };
+
+    const error = (err: any) => {
+      const message = `Error when getting realtime data. ${err}`;
+      this.presentToast(message, 'bottom', null);
+      return;
+    };
+
+    cordova.plugins.Situm.requestRealTimeUpdates(request, callback, error);
+  }
+
+  private removeRT() {
+    cordova.plugins.Situm.removeRealTimeUpdates();
+
+    // Remove markers from ui
+    this.rtMarkers.forEach(element => {
+      // Hide or remove them
+      element.remove();
+    });
+    this.rtMarkers = new Array<Marker>();
+  }
+
+  private createMarkerStoring(options : MarkerOptions, map, currentPosition, store) {
+    map.addMarker(options).then((marker : Marker) => {
+      if (currentPosition) {
+        this.marker = marker;
+        this.marker.showInfoWindow();
+      }
+      if (store) {
+        this.rtMarkers.push(marker);
+      }
+    });
   }
 
   private createMarker(options : MarkerOptions, map, currentPosition) {
