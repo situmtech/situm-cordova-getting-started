@@ -98,6 +98,6 @@
     <plugin name="situm-cordova-plugin-official" spec="^1.16.0" />
     <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="AIzaSyD3RIddnImiOjtE0ep8mV6FrXEEcc6Uaz8" />
     <preference name="GOOGLE_MAPS_IOS_API_KEY" value="AIzaSyDNN18tWO2MVvC3dhx2H9WiuGyhdk5cbbY" />
-    <engine name="android" spec="^6.4.0" />
     <engine name="ios" spec="5.0.0" />
+    <engine name="android" spec="^8.1.0" />
 </widget>
