@@ -26,6 +26,7 @@ NOTE: This app is only a use-case for testing purposes.
 #### iOS
 * A computer running macOS
 * Xcode
+* [Cocoapods](https://cocoapods.org) 
 
 
 ### 2. Initialize project:
