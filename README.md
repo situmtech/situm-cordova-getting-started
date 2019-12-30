@@ -1,6 +1,6 @@
 # Situm Cordova Getting Started
 
-NOTE: This app is only a use-case for testing purposes. It may not be up to date or optimized.
+NOTE: This app is only a use-case for testing purposes.
 
 ## Table of contents
 * [Usage](#usage)
@@ -26,6 +26,7 @@ NOTE: This app is only a use-case for testing purposes. It may not be up to date
 #### iOS
 * A computer running macOS
 * Xcode
+* [Cocoapods](https://cocoapods.org) 
 
 
 ### 2. Initialize project:
@@ -48,12 +49,13 @@ npm install ios-deploy
 ### 4. Add desired platforms:
 
 ```
-$ cordova platform add android@8.0.0 //if you want to generate an Android app (android platform above 7.0.0)
-$ cordova platform add iOS //if you wat yo generate an iOS app
+$ cordova platform add android //if you want to generate an Android app (android platform above 7.0.0)
+$ cordova platform add ios //if you wat yo generate an iOS app
 ```
 
 ### 5. Add credentials
-Before launching the application it is necessary to cover the credentials in the `src/services/situm.ts` file.
+Before launching the application it is necessary to provide SITUM credentials in the `src/services/situm.ts` file.
+Besides Google Maps Api Keys should be included in `config.xml`, in the `preferences` named `GOOGLE_MAPS_IOS_API_KEY` and `GOOGLE_MAPS_ANDROID_API_KEY`. In this example app, these Google Maps Api Keys are already included for you.
 
 ### 6. Install necessary dependencies
 ```
