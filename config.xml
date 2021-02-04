@@ -79,7 +79,7 @@
         <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
-        <preference name="deployment-target" value="9.0" />
+        <preference name="deployment-target" value="11.0" />
         <config-file parent="NSBluetoothAlwaysUsageDescription" target="*-Info.plist">
             <string>Bluetooth Permission is required.</string>
         </config-file>
