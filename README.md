@@ -2,6 +2,11 @@
 
 NOTE: This app is only a use-case for testing purposes.
 
+## Submitting Contributions
+
+You will need to sign a Contributor License Agreement (CLA) before making a submission. 
+[Learn more here.](https://situm.com/contributions/)
+
 ## Table of contents
 * [Usage](#usage)
 * [Run Android version](#run-android-version)
