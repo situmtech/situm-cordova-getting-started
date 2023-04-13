@@ -7,14 +7,27 @@ trigger: none
 
 pr: none
 
-pool:
-  vmImage: ubuntu-latest
+variables:
+  - group: Passwords
+  - group: SoftwareVersions
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+jobs:
+  - job: Android_App
+    pool:
+      vmImage: $(ubuntuVersion)
+
+    steps:
+      - templates: azure/common-steps.yaml
+        parameters:
+          system: "android"
+
+  - job: iOS_App
+    pool:
+      vmImage: $(macOSVersion)
+
+    steps:
+      - templates: azure/common-steps.yaml
+        parameters:
+          system: "ios"
+  

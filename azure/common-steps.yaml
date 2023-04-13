@@ -1,0 +1,32 @@
+parameters:
+  - name: system
+    type: string
+    
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSource: 'spec' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
+      versionSpec: $(nodeVersion)
+ 
+  - bash: |
+     echo -e "\n[+] Installing NPM version $(npmVersion)\n"
+     npm install -g $(npmVersion)
+
+     echo -e "\n[+] Install dependencies\n"
+     npm install
+
+     echo -e "\n[+] Install ionic framework cli\n"
+     npm install -g @ionic/cli
+
+     echo -e "\n[+] Create www folder \n"
+     mkdir www
+   
+    displayName: Install plugin dependencies
+ 
+  - ${{ if eq(parameters.system,'ios') }}:
+      
+    - bash: |
+        echo -e "\n[+] Install ios-deploy package\n"
+        npm install ios-deploy
+
+      displayName: Install ios-deploy
