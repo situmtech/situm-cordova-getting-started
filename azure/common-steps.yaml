@@ -6,7 +6,7 @@ steps:
   - task: NodeTool@0
     inputs:
       versionSource: 'spec' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
-      versionSpec: $(nodeVersion)
+      versionSpec: '14'
  
   - bash: |
      echo -e "\n[+] Installing NPM version $(npmVersion)\n"
