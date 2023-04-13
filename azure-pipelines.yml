@@ -18,7 +18,7 @@ jobs:
       vmImage: $(ubuntuVersion)
 
     steps:
-      - templates: azure/common-steps.yaml
+      - template: azure/common-steps.yaml
         parameters:
           system: "android"
 
@@ -27,7 +27,7 @@ jobs:
       vmImage: $(macOSVersion)
 
     steps:
-      - templates: azure/common-steps.yaml
+      - template: azure/common-steps.yaml
         parameters:
           system: "ios"
   
