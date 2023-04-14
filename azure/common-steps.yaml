@@ -24,3 +24,17 @@ steps:
    
     displayName: Install plugin dependencies
   
+  - ${{ if eq(parameters.system,'ios') }}:
+      
+    - bash: |
+        echo -e "\n[+] Install ios-deploy package\n"
+        npm install ios-deploy
+
+      displayName: Install ios-deploy
+
+  - bash: |
+
+      echo -e "\n[+] Add platform ${{ parameters.system }}\n"
+      npx cordova platform add ${{ parameters.system }}
+
+    displayName: Add platforms
