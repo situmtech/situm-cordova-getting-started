@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+
+pr: none
+
+variables:
+  - group: Passwords
+  - group: SoftwareVersions
+
+
+jobs:
+  - job: Android_App
+    pool:
+      vmImage: $(ubuntuVersion)
+
+    steps:
+      - template: azure/common-steps.yaml
+        parameters:
+          system: "android"
+
+  - job: iOS_App
+    pool:
+      vmImage: $(macOSVersion)
+
+    steps:
+      - template: azure/common-steps.yaml
+        parameters:
+          system: "ios"
+
