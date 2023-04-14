@@ -30,4 +30,9 @@ jobs:
       - template: azure/common-steps.yaml
         parameters:
           system: "ios"
+
+      - bash: |
+          echo -e "\n[+] Install ios-deploy package\n"
+          npm install ios-deploy
   
+        displayName: Install ios-deploy
